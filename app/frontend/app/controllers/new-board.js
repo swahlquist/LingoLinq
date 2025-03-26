@@ -2,7 +2,7 @@ import EmberObject from '@ember/object';
 import { set as emberSet, get as emberGet } from '@ember/object';
 import $ from 'jquery';
 import modal from '../utils/modal';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import stashes from '../utils/_stashes';
 import app_state from '../utils/app_state';
 import i18n from '../utils/i18n';
@@ -13,7 +13,7 @@ import { computed } from '@ember/object';
 export default modal.ModalController.extend({
   uncloseable: true,
   opening: function() {
-    this.set('model', CoughDrop.store.createRecord('board', {public: false, license: {type: 'private'}, grid: {rows: 2, columns: 4}}));
+    this.set('model', SweetSuite.store.createRecord('board', {public: false, license: {type: 'private'}, grid: {rows: 2, columns: 4}}));
     if(window.webkitSpeechRecognition) {
       var speech = new window.webkitSpeechRecognition();
       if(speech) {
@@ -43,7 +43,7 @@ export default modal.ModalController.extend({
 
     var res = [];
     var _this = this;
-    CoughDrop.board_categories.forEach(function(c) {
+    SweetSuite.board_categories.forEach(function(c) {
       var cat = $.extend({}, c);
       res.push(cat);
     });
@@ -63,8 +63,8 @@ export default modal.ModalController.extend({
   ahem: observer('model.for_user_id', function() {
     console.log(this.get('model.for_user_id'));
   }),
-  license_options: CoughDrop.licenseOptions,
-  public_options: CoughDrop.publicOptions,
+  license_options: SweetSuite.licenseOptions,
+  public_options: SweetSuite.publicOptions,
   attributable_license_type: computed('model.license.type', function() {
     if(this.get('model.license') && this.get('model.license.type') != 'private') {
       this.update_license();
@@ -281,7 +281,7 @@ export default modal.ModalController.extend({
       var _this = this;
       this.set('status', {saving: true});
       if(this.get('model.license')) {
-        this.set('model.license.copyright_notice_url', CoughDrop.licenseOptions.license_url(this.get('model.license.type')));
+        this.set('model.license.copyright_notice_url', SweetSuite.licenseOptions.license_url(this.get('model.license.type')));
       }
       if(this.get('model.home_board')) {
         var cats = [];

@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import CoughDrop from '../../app';
+import SweetSuite from '../../app';
 import i18n from '../../utils/i18n';
 import { observer } from '@ember/object';
 
@@ -11,7 +11,7 @@ export default Component.extend({
     var goal = this.get('goal');
     var elem = this.get('element').getElementsByClassName('stats')[0];
 
-//     CoughDrop.Visualizations.wait('bar', function() {
+//     SweetSuite.Visualizations.wait('bar', function() {
 //       if(elem && stats) {
 //
 //         var data = new window.google.visualization.DataTable();
@@ -48,7 +48,7 @@ export default Component.extend({
 //       }
 
 
-    CoughDrop.Visualizations.wait('goal-summary', function() {
+    SweetSuite.Visualizations.wait('goal-summary', function() {
       if(elem && goal && goal.get('time_units')) {
         var level = goal.get('best_time_level') || 'weekly';
         var data = new window.google.visualization.DataTable();

@@ -1,4 +1,4 @@
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import app_state from '../utils/app_state';
 import modal from '../utils/modal';
 import { get as emberGet, set as emberSet } from '@ember/object';

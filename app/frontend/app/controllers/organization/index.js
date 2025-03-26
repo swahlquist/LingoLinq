@@ -7,7 +7,7 @@ import i18n from '../../utils/i18n';
 import { set as emberSet, get as emberGet } from '@ember/object';
 import { observer } from '@ember/object';
 import { computed } from '@ember/object';
-import CoughDrop from '../../app';
+import SweetSuite from '../../app';
 
 export default Controller.extend({
   refresh_lists: function() {
@@ -410,7 +410,7 @@ export default Controller.extend({
           _this.refresh_supervisors();
         }
         if(action.match(/add_.*user/)) {
-          CoughDrop.store.findRecord('user', user_name).then(function(user) {
+          SweetSuite.store.findRecord('user', user_name).then(function(user) {
             user.reload().then(function(user) {
               var opts = {};
               if(user.get('permissions.edit')) {

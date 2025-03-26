@@ -1,12 +1,12 @@
 import Route from '@ember/routing/route';
 import persistence from '../utils/persistence';
 import app_state from '../utils/app_state';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import progress_tracker from '../utils/progress_tracker';
 
 export default Route.extend({
   model: function(params) {
-    var res = this.store.createRecord('user', {preferences: {}, referrer: CoughDrop.referrer, ad_referrer: CoughDrop.ad_referrer});
+    var res = this.store.createRecord('user', {preferences: {}, referrer: SweetSuite.referrer, ad_referrer: SweetSuite.ad_referrer});
     res.set('watch_user_name_and_cookies', true);
     res.set('reg_params', params);
     return res;

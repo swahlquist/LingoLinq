@@ -17,7 +17,7 @@ import stashes from './_stashes';
 import boundClasses from './bound_classes';
 import utterance from './utterance';
 import modal from './modal';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import contentGrabbers from './content_grabbers';
 import editManager from './edit_manager';
 import buttonTracker from './raw_events';
@@ -56,11 +56,11 @@ var app_state = EmberObject.extend({
     this.set('geolocation', geolocation);
     this.set('installed_app', capabilities.installed_app);
     this.set('no_linky', capabilities.installed_app && capabilities.system == 'iOS');
-    this.set('licenseOptions', CoughDrop.licenseOptions);
+    this.set('licenseOptions', SweetSuite.licenseOptions);
     this.set('device_name', capabilities.readable_device_name);
     var settings = window.domain_settings || {};
-    settings.app_name = CoughDrop.app_name || settings.app_name || "CoughDrop";
-    settings.company_name = CoughDrop.company_name || settings.company_name || "CoughDrop";
+    settings.app_name = SweetSuite.app_name || settings.app_name || "SweetSuite";
+    settings.company_name = SweetSuite.company_name || settings.company_name || "SweetSuite";
     this.set('domain_settings', settings);
     this.set('currentBoardState', null);
     var _this = this;
@@ -212,31 +212,31 @@ var app_state = EmberObject.extend({
     this.set('browser', capabilities.browser);
     this.set('system', capabilities.system);
     contentGrabbers.boardGrabber.transitioner = route;
-    CoughDrop.controller = controller;
+    SweetSuite.controller = controller;
     stashes.controller = controller;
     boundClasses.setup();
 //    controller.set('model', EmberObject.create());
     utterance.setup(controller);
     this.speak_mode_handlers();
     this.dom_changes_on_board_state_change();
-    CoughDrop.session = route.get('session');
+    SweetSuite.session = route.get('session');
     modal.close();
     if(session.get('access_token')) {
       // this shouldn't run until the db is initialized, otherwise if the user is offline
       // or has a spotty connection, then looking up the user will not succeed, and
       // the app will force a logout unexpectedly.
       var find_user = function(last_try) {
-        var find = CoughDrop.store.findRecord('user', 'self');
+        var find = SweetSuite.store.findRecord('user', 'self');
 
         find.then(function(user) {
           console.log("user initialization working..");
           var valid_user = RSVP.resolve(user);
           if(!session.get('as_user_id') && session.get('user_id') && session.get('user_id') != user.get('id')) {
             // mismatch due to a user being renamed
-            valid_user = CoughDrop.store.findRecord('user', session.get('user_id'));
+            valid_user = SweetSuite.store.findRecord('user', session.get('user_id'));
           } else if(session.get('as_user_id') && user.get('user_name') && session.get('as_user_id') != user.get('user_name')) {
             // mismatch due to a user being renamed
-            valid_user = CoughDrop.store.findRecord('user', session.get('as_user_id'));
+            valid_user = SweetSuite.store.findRecord('user', session.get('as_user_id'));
           }
           valid_user.then(function(user) {
             if(!user.get('fresh') && stashes.get('online')) {
@@ -251,7 +251,7 @@ var app_state = EmberObject.extend({
 
             if(stashes.get('speak_mode_user_id') || stashes.get('referenced_speak_mode_user_id')) {
               var ref_id = stashes.get('speak_mode_user_id') || stashes.get('referenced_speak_mode_user_id');
-              CoughDrop.store.findRecord('user', ref_id).then(function(user) {
+              SweetSuite.store.findRecord('user', ref_id).then(function(user) {
                 if(stashes.get('speak_mode_user_id')) {
                   app_state.set('speakModeUser', user);
                 }
@@ -312,7 +312,7 @@ var app_state = EmberObject.extend({
     }
     if(_this.get('currentUser') && _this.get('currentUser').reload) {
       _this.get('currentUser').reload().then(function() {
-        if(capabilities.installed_app && capabilities.system == 'iOS' && _this.get('currentUser.subscription.plan_id') == 'CoughDropiOSMonthly' && !_this.get('currentUser.checked_iap')) {
+        if(capabilities.installed_app && capabilities.system == 'iOS' && _this.get('currentUser.subscription.plan_id') == 'SweetSuiteiOSMonthly' && !_this.get('currentUser.checked_iap')) {
           _this.set('currentUser.checked_iap', true);
           // TODO: API call that triggers Purchasing.verify_receipt for the user
           // and reloads again on success
@@ -349,7 +349,7 @@ var app_state = EmberObject.extend({
     if(transition.to_route == 'board.index') {
       boundClasses.setup();
       var delay = app_state.get('currentUser.preferences.board_jump_delay') || window.user_preferences.any_user.board_jump_delay;
-      CoughDrop.log.track('global transition handled');
+      SweetSuite.log.track('global transition handled');
       runLater(this, this.check_for_board_readiness, delay, 50);
     }
     var controller = this.controller;
@@ -393,7 +393,7 @@ var app_state = EmberObject.extend({
         }
       } catch(e) { }
     }
-    if(CoughDrop.embedded && !this.get('speak_mode')) {
+    if(SweetSuite.embedded && !this.get('speak_mode')) {
       if(window.top && window.top != window.self) {
         window.top.location.replace(window.location);
       }
@@ -404,7 +404,7 @@ var app_state = EmberObject.extend({
     if(window._trackJs) {
       window._trackJs.disabled = protect_user;
     }
-    CoughDrop.protected_user = protect_user;
+    SweetSuite.protected_user = protect_user;
     stashes.persist('protected_user', protect_user);
   }),
   set_root_board_state: observer('set_as_root_board_state', 'currentBoardState', function() {
@@ -461,7 +461,7 @@ var app_state = EmberObject.extend({
       var _this = this;
       if($integration.length || ($board.length && $board.find(".button_row,canvas").length)) {
         runLater(function() {
-          CoughDrop.log.track('done transitioning');
+          SweetSuite.log.track('done transitioning');
           buttonTracker.transitioning = false;
         }, delay);
         return;
@@ -876,7 +876,7 @@ var app_state = EmberObject.extend({
     editManager.clear_paint_mode();
   },
   toggle_mode: function(mode, opts) {
-    CoughDrop.log.track('setting mode to ' + mode);
+    SweetSuite.log.track('setting mode to ' + mode);
     opts = opts || {};
     utterance.clear({skip_logging: true});
     var current_mode = stashes.get('current_mode');
@@ -1075,7 +1075,7 @@ var app_state = EmberObject.extend({
     $stash_hover.removeClass('on_button').data('button_id', null);
     editManager.clear_paint_mode();
     editManager.clear_preview_levels();
-    CoughDrop.log.track('done setting mode to ' + mode);
+    SweetSuite.log.track('done setting mode to ' + mode);
   },
   assert_lang_override: observer('vocalization_locale', function() {
     if(this.get('vocalization_locale')) {
@@ -1088,9 +1088,9 @@ var app_state = EmberObject.extend({
     }
   }),
   sync_send_utterance: observer('stashes.working_vocalization', function() {
-    if(!CoughDrop || !CoughDrop.store) { return; }
+    if(!SweetSuite || !SweetSuite.store) { return; }
     var shareable_voc = function() {
-      var u = CoughDrop.store.createRecord('utterance', {
+      var u = SweetSuite.store.createRecord('utterance', {
         button_list: stashes.get('working_vocalization') || [], 
         timestamp: (new Date()).getTime() / 1000,
         user_id: app_state.get('referenced_user.id')
@@ -1299,7 +1299,7 @@ var app_state = EmberObject.extend({
     }, 1000);
   },
   refresh_session_user: function() {
-    CoughDrop.store.findRecord('user', 'self').then(function(user) {
+    SweetSuite.store.findRecord('user', 'self').then(function(user) {
       if(!user.get('fresh')) {
         user.reload().then(function(user) {
           user.set('modeling_session', session.get('modeling_session'));
@@ -1363,7 +1363,7 @@ var app_state = EmberObject.extend({
       // device_key matches across the users
       var _this = this;
 
-      CoughDrop.store.findRecord('user', board_user_id).then(function(u) {
+      SweetSuite.store.findRecord('user', board_user_id).then(function(u) {
         var data = RSVP.resolve(u);
         if(!u.get('preferences') || (!u.get('fresh') && stashes.get('online'))) {
           data = u.reload();
@@ -1646,11 +1646,11 @@ var app_state = EmberObject.extend({
     if(app_state.get('currentUser.all_extra_colors')) {
       list = [].concat(app_state.get('currentUser.all_extra_colors'));
     // } else if(app_state.get('currentUser.preferences.extra_colors')) {
-    //   list = [].concat(CoughDrop.extra_keyed_colors);
+    //   list = [].concat(SweetSuite.extra_keyed_colors);
     } else {
       if(app_state.controller && app_state.controller.get('board.model') && window.tinycolor && editManager.controller.get('ordered_buttons')) {
         var knowns = {};
-        CoughDrop.keyed_colors.forEach(function(clr) {
+        SweetSuite.keyed_colors.forEach(function(clr) {
           var a = window.tinycolor(clr.border);
           var b = window.tinycolor(clr.fill);
           knowns[clr.border + clr.fill] = true;
@@ -1787,8 +1787,8 @@ var app_state = EmberObject.extend({
     }
   },
   on_user_change: observer('currentUser', function() {
-    if(this.get('currentUser') && CoughDrop.Board) {
-      CoughDrop.Board.clear_fast_html();
+    if(this.get('currentUser') && SweetSuite.Board) {
+      SweetSuite.Board.clear_fast_html();
     }
   }),
   speak_mode_handlers: observer(
@@ -1911,7 +1911,7 @@ var app_state = EmberObject.extend({
           }
         }
         this.set('eye_gaze', capabilities.eye_gaze);
-        this.set('embedded', !!(CoughDrop.embedded));
+        this.set('embedded', !!(SweetSuite.embedded));
         this.set('full_screen_capable', capabilities.fullscreen_capable());
         if(this.get('currentBoardState') && this.get('currentUser.needs_speak_mode_intro')) {
           var intro = this.get('currentUser.preferences.progress.speak_mode_intro_done');
@@ -1954,8 +1954,8 @@ var app_state = EmberObject.extend({
           app_state.set('manual_modeling', false);
           app_state.set('referenced_speak_mode_user', null);
           stashes.persist('referenced_speak_mode_user_id', null);
-          if(CoughDrop.Board) {
-            CoughDrop.Board.clear_fast_html();
+          if(SweetSuite.Board) {
+            SweetSuite.Board.clear_fast_html();
           }
         }
       }
@@ -2057,7 +2057,7 @@ var app_state = EmberObject.extend({
       tag_id = tag_id || JSON.stringify(tag.id);
       if(tag_id) {
         // check local or remote for matching tag
-        CoughDrop.store.findRecord('tag', tag_id).then(function(tag_object) {
+        SweetSuite.store.findRecord('tag', tag_id).then(function(tag_object) {
           if(tag_object.get('button')) {
             var button = Button.create(tag_object.get('button'));
             app_state.controller.activateButton(button, {board: editManager.controller.get('model'), trigger_source: 'tag'});
@@ -2518,16 +2518,16 @@ var app_state = EmberObject.extend({
       // load recent badges, debounced by ten minutes
       var last_check = (user && _this.get('last_user_badge_load_for_' + user.get('id'))) || 0;
       var now = (new Date()).getTime();
-      if(CoughDrop.store && user && !user.get('supporter_role') && user.get('currently_premium') && last_check < (now - 600000)) {
+      if(SweetSuite.store && user && !user.get('supporter_role') && user.get('currently_premium') && last_check < (now - 600000)) {
         _this.set('last_user_badge_load_for_' + user.get('id'), now);
         runLater(function() {
           _this.set('user_badge_hash', badge_hash);
-          CoughDrop.store.query('badge', {user_id: user.get('id'), recent: 1}).then(function(badges) {
+          SweetSuite.store.query('badge', {user_id: user.get('id'), recent: 1}).then(function(badges) {
             _this.set('user_badge_hash', badge_hash);
             badges = badges.filter(function(b) { return b.get('user_id') == user.get('id'); });
-            var badge = CoughDrop.Badge.best_earned_badge(badges);
+            var badge = SweetSuite.Badge.best_earned_badge(badges);
             if(!badge || badge.get('dismissed')) {
-              var next_badge = CoughDrop.Badge.best_next_badge(badges);
+              var next_badge = SweetSuite.Badge.best_next_badge(badges);
               badge = next_badge || badge;
             }
             _this.set('user_badge', badge);
@@ -2568,7 +2568,7 @@ var app_state = EmberObject.extend({
     }
   }),
   activate_button: function(button, obj) {
-    CoughDrop.log.start();
+    SweetSuite.log.start();
     if(button.apply_level && button.board) {
       button.apply_level(button.board.get('display_level'))
     }
@@ -2864,7 +2864,7 @@ var app_state = EmberObject.extend({
     (voc || '').split(/\s*&&\s*/).forEach(function(mod) {
       if(mod && mod.length > 0) {
         var found = false;
-        CoughDrop.special_actions.forEach(function(action) {
+        SweetSuite.special_actions.forEach(function(action) {
           if(found) { return; }
           if(mod == action.action || (action.match && mod.match(action.match))) {
             found = true;
@@ -3205,8 +3205,8 @@ var app_state = EmberObject.extend({
       },
       trigger: function(event, id, args) {
         if(app_state.get('currentUser.preferences.device.canvas_render')) {
-          if(CoughDrop.customEvents[event]) {
-            dom.sendAction(CoughDrop.customEvents[event], id, {event: args});
+          if(SweetSuite.customEvents[event]) {
+            dom.sendAction(SweetSuite.customEvents[event], id, {event: args});
           }
         }
       },

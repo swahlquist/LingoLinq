@@ -12,7 +12,7 @@ import {
   stub
 } from 'frontend/tests/helpers/jasmine';
 import { queryLog } from 'frontend/tests/helpers/ember_helper';
-import CoughDrop from '../../app';
+import SweetSuite from '../../app';
 import persistence from '../../utils/persistence';
 import modal from '../../utils/modal';
 import Utils from '../../utils/misc';

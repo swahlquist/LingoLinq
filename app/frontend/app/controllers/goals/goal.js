@@ -3,7 +3,7 @@ import $ from 'jquery';
 import persistence from '../../utils/persistence';
 import modal from '../../utils/modal';
 import i18n from '../../utils/i18n';
-import CoughDrop from '../../app';
+import SweetSuite from '../../app';
 import { observer } from '@ember/object';
 import { computed } from '@ember/object';
 import app_state from '../../utils/app_state';
@@ -41,7 +41,7 @@ export default Controller.extend({
     }
   }),
   assessment_badge_description: computed('model.assessment_badge', function() {
-    var ub = CoughDrop.store.createRecord('badge', {
+    var ub = SweetSuite.store.createRecord('badge', {
       name: this.get('model.badge_name') || this.get('model.summary'),
       level: 0,
       completion_settings: this.get('model.assessment_badge')
@@ -147,7 +147,7 @@ export default Controller.extend({
     badge_popup: function(badge) {
       var ub = badge.user_badge;
       if(!badge.user_badge) {
-        ub = CoughDrop.store.createRecord('badge', {
+        ub = SweetSuite.store.createRecord('badge', {
           name: this.get('model.badge_name') || this.get('model.summary'),
           level: badge.level,
           image_url: badge.image_url,

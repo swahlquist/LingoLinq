@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def app_name
-    ((@domain_overrides || {})['settings'] || {})['app_name'] || 'CoughDrop'
+    ((@domain_overrides || {})['settings'] || {})['app_name'] || ENV['APP_NAME'] || 'AAC App'
   end
   
   def crawler?

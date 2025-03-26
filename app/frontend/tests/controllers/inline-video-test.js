@@ -17,12 +17,12 @@ describe('InlineVideoController', 'controller:inline-video', function() {
   });
 });
 // import modal from '../utils/modal';
-// import CoughDrop from '../app';
+// import SweetSuite from '../app';
 // 
 // export default modal.ModalController.extend({
 //   opening: function() {
 //     var _this = this;
-//     CoughDrop.YT.track('video_preview', function(event_type) {
+//     SweetSuite.YT.track('video_preview', function(event_type) {
 //       if(event_type == 'end') {
 //         _this.send('close');
 //       }

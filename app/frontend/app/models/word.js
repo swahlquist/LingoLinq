@@ -1,7 +1,7 @@
 import DS from 'ember-data';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 
-CoughDrop.Word = DS.Model.extend({
+SweetSuite.Word = DS.Model.extend({
   word: DS.attr('string'),
   locale: DS.attr('string'),
   parts_of_speech: DS.attr('raw'),
@@ -11,4 +11,4 @@ CoughDrop.Word = DS.Model.extend({
   skip: DS.attr('boolean')
 });
 
-export default CoughDrop.Word;
+export default SweetSuite.Word;

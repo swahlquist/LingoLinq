@@ -3,7 +3,7 @@ import { set as emberSet, get as emberGet } from '@ember/object';
 import { later as runLater } from '@ember/runloop';
 import $ from 'jquery';
 import RSVP from 'rsvp';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import stashes from './_stashes';
 import session from './session';
 import i18n from './i18n';
@@ -35,9 +35,9 @@ import app_state from './app_state';
       runLater(function() {
         session.get('isAuthenticated'); // this prevents a flash of unauthenticated content on ios
         $('html,body').scrollTop(0);
-        console.log("COUGHDROP: ready to start");
-        CoughDrop.app.advanceReadiness();
-        CoughDrop.ready();
+        console.log("SWEETSUITE: ready to start");
+        SweetSuite.app.advanceReadiness();
+        SweetSuite.ready();
       });
     }
   };
@@ -63,20 +63,20 @@ import app_state from './app_state';
     enable: function() {
       if(this.get('ready')) { return; }
 
-      console_debug("COUGHDROP: extras ready");
+      console_debug("SWEETSUITE: extras ready");
       if(window.app_version) {
-        console_debug("COUGHDROP: app version " + window.app_version);
+        console_debug("SWEETSUITE: app version " + window.app_version);
       }
       this.set('ready', true);
       if(window.speechSynthesis) {
-        console_debug("COUGHDROP: tts enabled");
+        console_debug("SWEETSUITE: tts enabled");
       }
       extras.advance('extras');
     },
     storage: {
       find: function(store, key) {
         var defer = RSVP.defer();
-        capabilities.invoke({type: 'coughDropExtras', method: 'storage_find', options: {store: store, key: key}}).then(function(res) {
+        capabilities.invoke({type: 'sweetSuiteExtras', method: 'storage_find', options: {store: store, key: key}}).then(function(res) {
           defer.resolve(res);
         }, function(err) {
           defer.reject(err);
@@ -85,7 +85,7 @@ import app_state from './app_state';
       },
       find_all: function(store, ids) {
         var defer = RSVP.defer();
-        capabilities.invoke({type: 'coughDropExtras', method: 'storage_find_all', options: {store: store, ids: ids}}).then(function(res) {
+        capabilities.invoke({type: 'sweetSuiteExtras', method: 'storage_find_all', options: {store: store, ids: ids}}).then(function(res) {
           defer.resolve(res);
         }, function(err) {
           defer.reject(err);
@@ -94,7 +94,7 @@ import app_state from './app_state';
       },
       find_changed: function() {
         var defer = RSVP.defer();
-        capabilities.invoke({type: 'coughDropExtras', method: 'storage_find_changed', options: {}}).then(function(res) {
+        capabilities.invoke({type: 'sweetSuiteExtras', method: 'storage_find_changed', options: {}}).then(function(res) {
           defer.resolve(res);
         }, function(err) {
           defer.reject(err);
@@ -103,7 +103,7 @@ import app_state from './app_state';
       },
       store: function(store, obj, key) {
         var defer = RSVP.defer();
-        capabilities.invoke({type: 'coughDropExtras', method: 'storage_store', options: {store: store, record: obj}}).then(function(res) {
+        capabilities.invoke({type: 'sweetSuiteExtras', method: 'storage_store', options: {store: store, record: obj}}).then(function(res) {
           defer.resolve(res);
         }, function(err) {
           defer.reject(err);
@@ -112,7 +112,7 @@ import app_state from './app_state';
       },
       remove: function(store, id) {
         var defer = RSVP.defer();
-        capabilities.invoke({type: 'coughDropExtras', method: 'storage_remove', options: {store: store, record_id: id}}).then(function(res) {
+        capabilities.invoke({type: 'sweetSuiteExtras', method: 'storage_remove', options: {store: store, record_id: id}}).then(function(res) {
           defer.resolve(res);
         }, function(err) {
           defer.reject(err);
@@ -121,7 +121,7 @@ import app_state from './app_state';
       }
     },
     track_error: function(message) {
-      CoughDrop.track_error(message);
+      SweetSuite.track_error(message);
     }
   }).create();
   capabilities.device_id = function() {
@@ -212,21 +212,21 @@ import app_state from './app_state';
         if(capabilities.access_token) {
           options.headers['Authorization'] = "Bearer " + capabilities.access_token;
           options.headers['X-Device-Id'] = capabilities.device_id();
-          options.headers['X-CoughDrop-Version'] = window.CoughDrop.VERSION;
+          options.headers['X-SweetSuite-Version'] = window.SweetSuite.VERSION;
         }
-        if(CoughDrop.protected_user || stashes.get('protected_user')) {
+        if(SweetSuite.protected_user || stashes.get('protected_user')) {
           options.headers['X-SILENCE-LOGGER'] = 'true';
         }
         options.headers['X-SUPPORTS-REMOTE-BUTTONSET'] = 'true';
         options.headers['X-SUPPORTS-REMOTE-ENCRYPTION'] = 'true';
-        if(CoughDrop.session && CoughDrop.session.get('as_user_id')) {
-          options.headers['X-As-User-Id'] = CoughDrop.session.get('as_user_id');
+        if(SweetSuite.session && SweetSuite.session.get('as_user_id')) {
+          options.headers['X-As-User-Id'] = SweetSuite.session.get('as_user_id');
         }
         if(window.ApplicationCache) {
           options.headers['X-Has-AppCache'] = "true";
         }
-        if(CoughDrop.session && CoughDrop.session.get('logging_codes')) {
-          var codes = CoughDrop.session.get('logging_codes') || [];
+        if(SweetSuite.session && SweetSuite.session.get('logging_codes')) {
+          var codes = SweetSuite.session.get('logging_codes') || [];
           var too_old = (new Date()).getTime() - (68 * 60 * 1000);
           codes.forEach(function(code) {
             if(code.code && code.user_id && code.timestamp > too_old) {
@@ -266,7 +266,7 @@ import app_state from './app_state';
               // The bowels of ember aren't expecting $.ajax to return a real
               // promise and so they don't catch the rejection properly, which
               // potentially causes all sorts of unexpected uncaught errors.
-              // NOTE: this means that any CoughDrop code should not use the error parameter
+              // NOTE: this means that any SweetSuite code should not use the error parameter
               // if it expects to receive a proper promise.
               // TODO: raise an error somehow if the caller provides an error function
               // and expects a proper promise in response.
@@ -387,9 +387,9 @@ import app_state from './app_state';
   extras.meta = $.ajax.meta;
   extras.meta_push = $.ajax.meta_push;
 
-  window.coughDropExtras = extras;
+  window.sweetSuiteExtras = extras;
   extras.advance.watch('device', function() {
-    capabilities.invoke({type: 'coughDropExtras', method: 'init'}).then(function(res) {
+    capabilities.invoke({type: 'sweetSuiteExtras', method: 'init'}).then(function(res) {
       extras.enable();
     }, function(err) {
       // TODO: this happens when there is no db, in which case the web site should still
@@ -453,4 +453,4 @@ window.time_log = function(str) {
   console.log(str + "  :" + stamp);
 };
 
-export default window.coughDropExtras;
+export default window.sweetSuiteExtras;

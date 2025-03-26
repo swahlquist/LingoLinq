@@ -4,10 +4,10 @@ import { later as runLater, run } from '@ember/runloop';
 import RSVP from 'rsvp';
 import $ from 'jquery';
 import stashes from './_stashes';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import capabilities from './capabilities';
 import persistence from './persistence';
-import coughDropExtras from './extras';
+import sweetSuiteExtras from './extras';
 import app_state from './app_state';
 import i18n from './i18n';
 import modal from './modal';
@@ -18,7 +18,7 @@ var session = EmberObject.extend({
     $.each(['model', 'controller', 'view', 'route'], function(i, component) {
       application.inject(component, 'session', 'cough_drop:session');
     });
-    CoughDrop.session = session;
+    SweetSuite.session = session;
   },
   persist: function(data) {
     session.set('auth_settings_fallback_data', data);
@@ -161,7 +161,7 @@ var session = EmberObject.extend({
         }
       }
       if(data.sale !== undefined) {
-        CoughDrop.sale = parseInt(data.sale, 10) || false;
+        SweetSuite.sale = parseInt(data.sale, 10) || false;
       }
       if(data.ws_url) {
         stashes.persist('ws_url', data.ws_url);
@@ -226,7 +226,7 @@ var session = EmberObject.extend({
   },
   restore: function(force_check_for_token) {
     if(!stashes.get('enabled')) { return {}; }
-    console.debug('COUGHDROP: restoring session data');
+    console.debug('SWEETSUITE: restoring session data');
     var store_data = stashes.get_object('auth_settings', true) || session.auth_settings_fallback() || {};
     var key = store_data.access_token || "none";
     persistence.tokens = persistence.tokens || {};

@@ -3,12 +3,12 @@ import { computed } from '@ember/object';
 
 export default modal.ModalController.extend({
   version: computed(function() {
-    return (window.CoughDrop && window.CoughDrop.update_version) || 'unknown';
+    return (window.SweetSuite && window.SweetSuite.update_version) || 'unknown';
   }),
   actions: {
     restart: function() {
-      if(window.CoughDrop && window.CoughDrop.install_update) {
-        window.CoughDrop.install_update();
+      if(window.SweetSuite && window.SweetSuite.install_update) {
+        window.SweetSuite.install_update();
       } else {
         this.set('error', true);
       }

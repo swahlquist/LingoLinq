@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import modal from '../../utils/modal';
-import coughDropExtras from '../../utils/extras';
+import sweetSuiteExtras from '../../utils/extras';
 import app_state from '../../utils/app_state';
 import i18n from '../../utils/i18n';
 
@@ -13,7 +13,7 @@ export default Route.extend({
   setupController: function(controller, model) {
     if(model) { model.reload(); }
     controller.set('model', model);
-    controller.set('extras', coughDropExtras);
+    controller.set('extras', sweetSuiteExtras);
     controller.set('parent_object', null);
     controller.set('password', null);
     controller.set('new_user_name', null);

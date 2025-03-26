@@ -1,14 +1,14 @@
 import { later as runLater } from '@ember/runloop';
 import RSVP from 'rsvp';
 import DS from 'ember-data';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import i18n from '../utils/i18n';
 import persistence from '../utils/persistence';
 import contentGrabbers from '../utils/content_grabbers';
 import { observer } from '@ember/object';
 import { computed } from '@ember/object';
 
-CoughDrop.Profile = DS.Model.extend({
+SweetSuite.Profile = DS.Model.extend({
   didLoad: function() {
   },
   profile_id: DS.attr('string'),
@@ -17,4 +17,4 @@ CoughDrop.Profile = DS.Model.extend({
   permissions: DS.attr('raw')
 });
 
-export default CoughDrop.Profile;
+export default SweetSuite.Profile;

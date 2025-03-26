@@ -1,14 +1,14 @@
 import { later as runLater } from '@ember/runloop';
 import RSVP from 'rsvp';
 import DS from 'ember-data';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import i18n from '../utils/i18n';
 import persistence from '../utils/persistence';
 import contentGrabbers from '../utils/content_grabbers';
 import { observer } from '@ember/object';
 import { computed } from '@ember/object';
 
-CoughDrop.Sound = DS.Model.extend({
+SweetSuite.Sound = DS.Model.extend({
   didLoad: function() {
     this.checkForDataURL().then(null, function() { });
     this.clean_license();
@@ -127,7 +127,7 @@ CoughDrop.Sound = DS.Model.extend({
   checkForDataURL: function() {
     this.set('checked_for_data_url', true);
     var _this = this;
-    if(!this.get('data_url') && CoughDrop.remote_url(this.get('url')) && !persistence.online) {
+    if(!this.get('data_url') && SweetSuite.remote_url(this.get('url')) && !persistence.online) {
       return persistence.find_url(this.get('url'), 'sound').then(function(data_uri) {
         _this.set('data_url', data_uri);
         return _this;
@@ -141,7 +141,7 @@ CoughDrop.Sound = DS.Model.extend({
     this.checkForDataURL().then(null, function() { });
   })
 });
-CoughDrop.Sound.reopenClass({
+SweetSuite.Sound.reopenClass({
   mimic_server_processing: function(record, hash) {
     if(record.get('data_url')) {
       hash.sound.url = record.get('data_url');
@@ -151,4 +151,4 @@ CoughDrop.Sound.reopenClass({
   }
 });
 
-export default CoughDrop.Sound;
+export default SweetSuite.Sound;

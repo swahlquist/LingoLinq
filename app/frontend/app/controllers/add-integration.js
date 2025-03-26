@@ -1,9 +1,9 @@
 import modal from '../utils/modal';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 
 export default modal.ModalController.extend({
   opening: function() {
-    var integration = CoughDrop.store.createRecord('integration', {
+    var integration = SweetSuite.store.createRecord('integration', {
       custom_integration: true,
       user_id: this.get('model.user.id')
     });

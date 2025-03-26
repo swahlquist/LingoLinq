@@ -2,7 +2,7 @@
   <div class="wide_links">
     <div class="row">
       <div class='col-sm-6'>
-        <span style="color: #888; padding-right: 10px;">{{t "%app_name%" key='coughdrop'}}</span>
+        <span style="color: #888; padding-right: 10px;">{{t "%app_name%" key='app_name'}}</span>
         {{#unless app_state.no_linky}}
           {{#if app_state.installed_app}}
             <a href="https://www.mycoughdrop.com" target="_blank">{{t "Web Site" key='web_site'}}</a> <span class='text-muted'>|</span>
@@ -28,7 +28,7 @@
       </div>
       <div class='col-sm-4' style="text-align: right;">
         {{#unless app_state.installed_app}}
-          <a href="https://github.com/CoughDrop" target="_blank">{{t "Developers" key='developers'}}</a> <span class='text-muted'>|</span>
+          <a href="https://github.com/SweetSuite" target="_blank">{{t "Developers" key='developers'}}</a> <span class='text-muted'>|</span>
         {{/unless}}
         {{#link-to "privacy"}}{{t "Privacy" key='privacy'}}{{/link-to}} <span class='text-muted'>|</span>
         {{#link-to "terms"}}{{t "Terms" key='terms'}}{{/link-to}}

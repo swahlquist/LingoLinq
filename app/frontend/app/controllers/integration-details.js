@@ -1,5 +1,5 @@
 import modal from '../utils/modal';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 
 export default modal.ModalController.extend({
   opening: function() {

@@ -1,10 +1,10 @@
 {
   "name": "frontend",
   "version": "0.0.2",
-  "description": "CoughDrop frontend",
+  "description": "SweetSuite frontend",
   "repository": "",
   "license": "AGPLv3",
-  "author": "CoughDrop, Inc.",
+  "author": "OpenAAC",
   "directories": {
     "doc": "doc",
     "test": "tests"

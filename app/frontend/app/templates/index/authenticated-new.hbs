@@ -18,7 +18,7 @@
     {{#if blank_slate}}
       <a class="list-group-item" href="#" style="height: 80px;" {{action 'getting_started'}}>
         <span class="glyphicon glyphicon-user"></span>
-        <strong>{{t "Welcome to %app_name%!" key='welcome_to_coughdrop'}}</strong>
+        <strong>{{t "Welcome to %app_name%!" key='welcome_to_app'}}</strong>
         <div class="progress" style="margin-bottom: 0;">
           <div class="progress-bar" role="progressbar" aria-valuenow={{blank_slate_percent}} aria-valuemin="0" aria-valuemax="100" style={{blank_slate_percent_style}}>
             <span class="sr-only">{{t "%{pct}% Complete" key='percent_complete' pct=blank_slate_percent}}</span>
@@ -495,13 +495,13 @@
             {{#link-to 'user.subscription' app_state.currentUser.user_name class='purchase_link'}}
               <span style='color: #fff;'>
                 <span class={{if app_state.currentUser.expired "glyphicon glyphicon-info-sign expired" "glyphicon glyphicon-info-sign"}}></span>
-                {{t "Purchase %app_name%" key='purchase_coughdrop'}}
+                {{t "Purchase %app_name%" key='purchase_app'}}
               </span>
             {{/link-to}}
           </div>
         {{else if app_state.limited_free_space}}
           <div class='alert alert-danger'>
-            {{t "Your device is almost out of free space! You only have %{mb}Mb of storage available. You may need to delete some data from other apps for CoughDrop to work properly offline." mb=app_state.limited_free_space.mb key='need_memory_for_offline'}}
+            {{t "Your device is almost out of free space! You only have %{mb}Mb of storage available. You may need to delete some data from other apps for %app_name% to work properly offline." mb=app_state.limited_free_space.mb key='need_memory_for_offline'}}
           </div>
         {{else if model.earned_badge}}
           <div>

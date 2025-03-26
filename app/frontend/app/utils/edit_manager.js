@@ -3,7 +3,7 @@ import { set as emberSet, get as emberGet } from '@ember/object';
 import { later as runLater } from '@ember/runloop';
 import $ from 'jquery';
 import RSVP from 'rsvp';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import Button from './button';
 import stashes from './_stashes';
 import app_state from './app_state';
@@ -1322,7 +1322,7 @@ var editManager = EmberObject.extend({
     if(!folder.load_board || !folder.load_board.key) { return RSVP.reject({error: "not a folder!"}); }
     this.clear_button(a);
 
-    var find = CoughDrop.store.findRecord('board', folder.load_board.key).then(function(ref) {
+    var find = SweetSuite.store.findRecord('board', folder.load_board.key).then(function(ref) {
       return ref;
     });
     var reload = find.then(function(ref) {
@@ -1501,11 +1501,11 @@ var editManager = EmberObject.extend({
     this.check_button(id);
   },
   process_for_displaying: function(ignore_fast_html) {
-    CoughDrop.log.track('processing for displaying');
+    SweetSuite.log.track('processing for displaying');
     var controller = this.controller;
     if(!controller) { return; }
     if(app_state.get('edit_mode') && controller.get('ordered_buttons')) {
-      CoughDrop.log.track('will not redraw while in edit mode');
+      SweetSuite.log.track('will not redraw while in edit mode');
       // return;
     }
     var board = controller.get('model');
@@ -1522,7 +1522,7 @@ var editManager = EmberObject.extend({
     var pending_buttons = [];
     var used_button_ids = {};
 
-    CoughDrop.log.track('process word suggestions');
+    SweetSuite.log.track('process word suggestions');
     if(controller.get('model.word_suggestions')) {
       controller.set('suggestions', {loading: true});
       word_suggestions.load().then(function() {
@@ -1576,13 +1576,13 @@ var editManager = EmberObject.extend({
             && board.get('fast_html.skin') == app_state.get('referenced_user.preferences.skin') 
             && board.get('fast_html.symbols') == app_state.get('referenced_user.preferences.preferred_symbols') 
             && board.get('focus_id') == board.get('fast_html.focus_id')) {
-        CoughDrop.log.track('already have fast render');
+        SweetSuite.log.track('already have fast render');
         resume_scanning();
         return;
       } else {
         board.set('fast_html', null);
         board.add_classes();
-        CoughDrop.log.track('trying fast render');
+        SweetSuite.log.track('trying fast render');
         var fast = board.render_fast_html({
           label_locale: app_state.get('label_locale'),
           height: controller.get('height'),
@@ -1612,21 +1612,21 @@ var editManager = EmberObject.extend({
 
     // build the ordered grid
     // TODO: work without ordered grid (i.e. scene displays)
-    CoughDrop.log.track('finding content locally');
+    SweetSuite.log.track('finding content locally');
     var prefetch = board.find_content_locally().then(null, function(err) {
       return RSVP.resolve();
     });
 
     buttons.forEach(function(btn) {
       if(btn.no_skin && btn.image_id) {
-        CoughDrop.Image.unskins = CoughDrop.Image.unskins || {};
-        CoughDrop.Image.unskins[btn.image_id] = true
+        SweetSuite.Image.unskins = SweetSuite.Image.unskins || {};
+        SweetSuite.Image.unskins[btn.image_id] = true
       }
     });
     var image_urls = board.variant_image_urls(app_state.get('referenced_user.preferences.skin'));
     var sound_urls = board.get('sound_urls');
     prefetch.then(function() {
-      CoughDrop.log.track('creating buttons');
+      SweetSuite.log.track('creating buttons');
       preferred_symbols = app_state.get('referenced_user.preferences.preferred_symbols') || 'original';
       for(var idx = 0; idx < grid.rows; idx++) {
         var row = [];
@@ -1668,27 +1668,27 @@ var editManager = EmberObject.extend({
         result.push(row);
       }
       if(!allButtonsReady) {
-        CoughDrop.log.track('need to wait for buttons');
+        SweetSuite.log.track('need to wait for buttons');
         board.set('pending_buttons', pending_buttons);
         board.addObserver('all_ready', function() {
           if(!controller.get('ordered_buttons')) {
             if(controller.get('model.id') == result.board_id) {
               board.set('pending_buttons', null);
               controller.set('ordered_buttons',result);
-              CoughDrop.log.track('redrawing if needed');
+              SweetSuite.log.track('redrawing if needed');
               controller.redraw_if_needed();
-              CoughDrop.log.track('done redrawing if needed');
+              SweetSuite.log.track('done redrawing if needed');
               resume_scanning();  
             }
           }
         });
         controller.set('ordered_buttons', null);
       } else if(controller.get('model.id') == result.board_id) {
-        CoughDrop.log.track('buttons did not need waiting');
+        SweetSuite.log.track('buttons did not need waiting');
         controller.set('ordered_buttons', result);
-        CoughDrop.log.track('redrawing if needed');
+        SweetSuite.log.track('redrawing if needed');
         controller.redraw_if_needed();
-        CoughDrop.log.track('done redrawing if needed');
+        SweetSuite.log.track('done redrawing if needed');
         resume_scanning();
         for(var idx = 0; idx < result.length; idx++) {
           for(var jdx = 0; jdx < result[idx].length; jdx++) {
@@ -2019,7 +2019,7 @@ var editManager = EmberObject.extend({
             user.set('preferences.home_board.level', level);
           }
           user.save().then(function() {
-            CoughDrop.store.findRecord('board', user.get('preferences.home_board.id')).then(function(board) {
+            SweetSuite.store.findRecord('board', user.get('preferences.home_board.id')).then(function(board) {
               resolve(board);
             }, function(err) {
               reject(i18n.t('user_home_find_failed', "Failed to retrieve the copied home board"));

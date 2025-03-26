@@ -10,7 +10,7 @@
       {{#if blank_slate}}
         <a class="list-group-item" href="#" style="height: 80px;" {{action 'getting_started'}}>
           <span class="glyphicon glyphicon-user"></span>
-          <strong>{{t "Welcome to %app_name%!" key='welcome_to_coughdrop'}}</strong>
+          <strong>{{t "Welcome to %app_name%!" key='welcome_to_app'}}</strong>
           <div class="progress" style="margin-bottom: 0;">
             <div class="progress-bar" role="progressbar" aria-valuenow={{blank_slate_percent}} aria-valuemin="0" aria-valuemax="100" style={{blank_slate_percent_style}}>
               <span class="sr-only">{{t "%{pct}% Complete" key='percent_complete' pct=blank_slate_percent}}</span>
@@ -320,7 +320,7 @@
             {{t "Let's Get Started" key='lets_get_started'}}
           </h2>
           <div style='text-align: left;'>
-            {{t "Thanks for signing up! If you're new to %app_name%, don't worry! We want to help make things easy as you get started. Just hit the button below to learn more about how the app works." key='thanks_getting_started_with_coughdrop'}}
+            {{t "Thanks for signing up! If you're new to %app_name%, don't worry! We want to help make things easy as you get started. Just hit the button below to learn more about how the app works." key='thanks_getting_started_with_app'}}
           </div>
           <div style='margin: 10px 0 40px;'>
             <button class='btn btn-lg btn-primary' {{action 'intro'}}>{{t "How To Use %app_name%" key='how_this_works'}}</button>
@@ -361,13 +361,13 @@
           <div style="margin-bottom: 20px; text-align: center;">
             <h2>
               <span class="glyphicon glyphicon-refresh"></span>
-              {{t "%app_name% works Offline!" key='coughdrop_works_offline'}}
+              {{t "%app_name% works Offline!" key='app_works_offline'}}
             </h2>
             <div style='text-align: left;'>
               {{#if blank_slate}}
                 {{t "Once you're done with the setup checklist and have a home board set, you'll see a \"Sync\" button you can hit to save all your boards locally for offline use!" key='you_will_have_sync_for_offline_excl'}}
               {{else}}
-                {{t "Remember, you don't need a constant Internet connection to use CoughDrop. Just hit the \"Sync\" button when you're online and all your boards will be saved locally for offline use!" key='you_can_sync_for_offline'}}
+                {{t "Remember, you don't need a constant Internet connection to use SweetSuite. Just hit the \"Sync\" button when you're online and all your boards will be saved locally for offline use!" key='you_can_sync_for_offline'}}
               {{/if}}
             </div>
           </div>

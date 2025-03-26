@@ -8,7 +8,7 @@ import i18n from '../utils/i18n';
 import Utils from '../utils/misc';
 import persistence from '../utils/persistence';
 import word_suggestions from '../utils/word_suggestions';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import { observer } from '@ember/object';
 import { computed } from '@ember/object';
 
@@ -202,7 +202,7 @@ export default modal.ModalController.extend({
         this.set('model.user', app_state.get('currentUser'));
       } else {
         var u = (app_state.get('currentUser.known_supervisees') || []).find(function(u) { return u.id == for_user_id; });
-        u = u || CoughDrop.store.peekRecord('user', for_user_id);
+        u = u || SweetSuite.store.peekRecord('user', for_user_id);
         u = u || (app_state.get('quick_users') || {})[for_user_id];
         this.set('model.user', u);
       }
@@ -224,7 +224,7 @@ export default modal.ModalController.extend({
         }
       }).then(function(data) {
         _this.set('phrase.saved_sound_id', sound.get('id'));
-        CoughDrop.store.findRecord('board', data.board.id).then(function(b) { b.reload(); }, function() { });
+        SweetSuite.store.findRecord('board', data.board.id).then(function(b) { b.reload(); }, function() { });
       }, function() {
         modal.error(i18n.t('error_updating_button', "There was an unexpected error adding the sound to the button"));
       });
@@ -294,7 +294,7 @@ export default modal.ModalController.extend({
       this.set('next_phrase', next_phrase);
       if(this.get('phrase.sound.unloaded')) {
         var _this = this;
-        CoughDrop.store.findRecord('sound', this.get('phrase.sound.id')).then(function(sound) {
+        SweetSuite.store.findRecord('sound', this.get('phrase.sound.id')).then(function(sound) {
           _this.set('phrase.sound', sound);
         }, function() {
           _this.set('phrase.sound.errored', true);

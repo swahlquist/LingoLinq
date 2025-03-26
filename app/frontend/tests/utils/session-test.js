@@ -16,7 +16,7 @@ import session from '../../utils/session';
 import stashes from '../../utils/_stashes';
 import persistence from '../../utils/persistence';
 import EmberObject from '@ember/object';
-import CoughDrop from '../../app';
+import SweetSuite from '../../app';
 import { run as emberRun } from '@ember/runloop';
 
 describe('session', function() {
@@ -40,7 +40,7 @@ describe('session', function() {
         }
       };
       session.setup(app);
-      expect(CoughDrop.session).toEqual(session);
+      expect(SweetSuite.session).toEqual(session);
       expect(injections).toEqual(['model', 'controller', 'view', 'route']);
       expect(registered).toEqual(true);
     });

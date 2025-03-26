@@ -18,14 +18,14 @@ describe('EditBoardDetailsController', 'controller:edit-board-details', function
   });
 });
 // import Ember from 'ember';
-// import CoughDrop from '../app';
+// import SweetSuite from '../app';
 // import app_state from '../utils/app_state';
 // import modal from '../utils/modal';
 //
 // export default EmberObjectController.extend({
 //   needs: ['board', 'application'],
-//   licenseOptions: CoughDrop.licenseOptions,
-//   iconUrls: CoughDrop.iconUrls,
+//   licenseOptions: SweetSuite.licenseOptions,
+//   iconUrls: SweetSuite.iconUrls,
 //   cant_change_public: function() {
 //     return this.get('originally_public') && app_state.get('currentUser.premium_disabled');
 //   }.property('originally_public', 'app_state.currentUser.premium_disabled'),

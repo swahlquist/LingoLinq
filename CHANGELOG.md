@@ -1,4 +1,4 @@
-# CoughDrop Changelog
+# App Changelog
 
 ## Master
 ### 2020-09-30
@@ -92,7 +92,7 @@
 - support for CDNs for cached images
 - global trends interface
 - better support for native text-to-speech
-- better support for "login via CoughDrop"
+- better support for "login via SweetSuite"
 
 ### 2017-09-01
 - optional clicking sound when selecting unspoken buttons

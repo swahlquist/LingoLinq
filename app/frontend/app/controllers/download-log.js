@@ -1,5 +1,5 @@
 import modal from '../utils/modal';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import progress_tracker from '../utils/progress_tracker';
 import persistence from '../utils/persistence';
 

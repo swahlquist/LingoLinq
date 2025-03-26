@@ -6,7 +6,7 @@ import {
 } from '@ember/runloop';
 import RSVP from 'rsvp';
 import $ from 'jquery';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 
 // NOTE: there is an assumption that each stashed value is independent and
 // non-critical, so for example if one attribute got renamed it would not
@@ -36,10 +36,10 @@ var stashes = EmberObject.extend({
           }
         }
       }
-      console.debug('COUGHDROP: restoring stash from db, ' + count + ' values');
+      console.debug('SWEETSUITE: restoring stash from db, ' + count + ' values');
       return {};
     }, function(err) {
-      console.debug('COUGHDROP: db storage stashes not found');
+      console.debug('SWEETSUITE: db storage stashes not found');
       return RSVP.resolve();
     });
   },
@@ -62,10 +62,10 @@ var stashes = EmberObject.extend({
     } catch(e) {
       stashes.set('enabled', false);
       if(console.debug) {
-        console.debug('COUGHDROP: localStorage not working');
+        console.debug('SWEETSUITE: localStorage not working');
         console.debug(e);
       } else {
-        console.log('COUGHDROP: localStorage not working');
+        console.log('SWEETSUITE: localStorage not working');
         console.log(e);
       }
     }
@@ -129,8 +129,8 @@ var stashes = EmberObject.extend({
       window.user_preferences.global_integrations = stashes.get('global_integrations');
     } else if(!Ember.testing) {
       runLater(function() {
-        if(CoughDrop && CoughDrop.session && CoughDrop.session.check_token && !CoughDrop.testing) {
-          CoughDrop.session.check_token();
+        if(SweetSuite && SweetSuite.session && SweetSuite.session.check_token && !SweetSuite.testing) {
+          SweetSuite.session.check_token();
         }
       }, 500);
     }
@@ -213,10 +213,10 @@ var stashes = EmberObject.extend({
         var data_uri = "data:text/json;base64," + btoa(JSON.stringify({ db_id: obj.user_name, filename: "db_stats.json" }));
         var blob = stash_capabilities.data_uri_to_blob(data_uri);
         stash_capabilities.storage.write_file('json', 'db_stats.json', blob).then(function(res) {
-          console.log("COUGHDROP: db_stats persisted!");
+          console.log("SWEETSUITE: db_stats persisted!");
           done = true;
           defer.resolve();
-        }, function() { console.error("COUGHDROP: db_stats failed.."); defer.resolve(); });
+        }, function() { console.error("SWEETSUITE: db_stats failed.."); defer.resolve(); });
       } else {
         done = true;
         defer.resolve();
@@ -341,7 +341,7 @@ var stashes = EmberObject.extend({
     poll: function() {
       if(navigator && navigator.geolocation) { stashes.geolocation = navigator.geolocation; }
       var go = function() {
-        if(stashes.geolocation && !CoughDrop.embedded) {
+        if(stashes.geolocation && !SweetSuite.embedded) {
           if(stashes.geo.watching) {
             stashes.geolocation.clearWatch(stashes.geo.watching);
           }
@@ -383,7 +383,7 @@ var stashes = EmberObject.extend({
     return Date.now() / 1000;
   },
   notify_observers(button) {
-    if(window.parent && window.parent != window && CoughDrop.embedded) {
+    if(window.parent && window.parent != window && SweetSuite.embedded) {
       window.parent.postMessage({
         type: 'aac_event',
         aac_type: 'button',
@@ -612,7 +612,7 @@ var stashes = EmberObject.extend({
         days.push(rec);
       });
       // ajax call to push daily_use data
-      var log = CoughDrop.store.createRecord('log', {
+      var log = SweetSuite.store.createRecord('log', {
         type: 'daily_use',
         events: days
       });
@@ -690,7 +690,7 @@ var stashes = EmberObject.extend({
     // If log pushes have been failing, don't keep trying on every button press
     var wait_on_error = stashes.errored_at && stashes.errored_at > 10 && ((timestamp - stashes.errored_at) < (2 * 60));
     // TODO: add listener on persistence.online and trigger this log save stuff when reconnected
-    if(CoughDrop.session && CoughDrop.session.get('isAuthenticated') && stashes.get('online') && usage_log.length > 0 && !wait_on_error) {
+    if(SweetSuite.session && SweetSuite.session.get('isAuthenticated') && stashes.get('online') && usage_log.length > 0 && !wait_on_error) {
       // If there's more than 50 events, or it's been more than 30 minutes
       // since the last recorded event.
       if(usage_log.length > 50 || diff == -1 || diff > (30 * 60 * 1000) || !only_if_convenient) {
@@ -700,7 +700,7 @@ var stashes = EmberObject.extend({
         var to_persist = history.slice(0, 250);
         var for_later = history.slice(250,  history.length);
         stashes.persist('usage_log', [].concat(for_later));
-        var log = CoughDrop.store.createRecord('log', {
+        var log = SweetSuite.store.createRecord('log', {
           events: to_persist
         });
         log.cleanup();

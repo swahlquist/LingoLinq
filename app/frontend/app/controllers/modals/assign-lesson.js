@@ -7,14 +7,14 @@ import evaluation from '../../utils/eval';
 import { set as emberSet } from '@ember/object';
 import { computed } from '@ember/object';
 import { observer } from '@ember/object';
-import CoughDrop from '../../app';
+import SweetSuite from '../../app';
 
 export default modal.ModalController.extend({
   opening: function() {
     if(this.get('model.lesson.editable')) {
       this.set('lesson', this.get('model.lesson'));
     } else {
-      var lesson = CoughDrop.store.createRecord('lesson');
+      var lesson = SweetSuite.store.createRecord('lesson');
       lesson.set('target_types', ['supervisor']);
       this.set('lesson', lesson);
     }

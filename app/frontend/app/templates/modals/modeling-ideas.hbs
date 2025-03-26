@@ -34,7 +34,7 @@
       {{#if current_activity.word}}
         <img src={{path "images/modeling_ideas.svg"}} style='width: 100px; float: left; padding-right: 10px;' />
         <p>{{t "You can help your communicator learn to use their words by showing them! Look for opportunities to <b>use the word \"%{word}\"</b> in different activities and settings so they will get more comfortable with the word." word=current_activity.word key='chances_to_use_word'}}</p>
-        <p style='margin-top: 30px; font-size: 14px;'>{{t "Below are some other words CoughDrop sees might be useful to work with for your communicators." key='more_core_words'}}</p>
+        <p style='margin-top: 30px; font-size: 14px;'>{{t "Below are some other words %app_name% sees might be useful to work with for your communicators." key='more_core_words'}}</p>
       {{else}}
         <p style='font-size: 14px;'>{{t "Each of the following words were suggested based on available user activity, goals, time in the app, etc. Some words are included for different reasons, you can review the reasons below, or set a goal inside of %app_name% to track progress toward these words." key='target_words_explainer'}}</p>
       {{/if}}

@@ -1,9 +1,9 @@
 import DS from 'ember-data';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import persistence from '../utils/persistence';
 import { computed } from '@ember/object';
 
-CoughDrop.Integration = DS.Model.extend({
+SweetSuite.Integration = DS.Model.extend({
   name: DS.attr('string'),
   user_id: DS.attr('string'),
   custom_integration: DS.attr('boolean'),
@@ -45,4 +45,4 @@ CoughDrop.Integration = DS.Model.extend({
   }),
 });
 
-export default CoughDrop.Integration;
+export default SweetSuite.Integration;

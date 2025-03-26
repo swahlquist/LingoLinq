@@ -1,9 +1,9 @@
 import DS from 'ember-data';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import persistence from '../utils/persistence';
 import { computed } from '@ember/object';
 
-CoughDrop.Webhook = DS.Model.extend({
+SweetSuite.Webhook = DS.Model.extend({
   name: DS.attr('string'),
   user_id: DS.attr('string'),
   url: DS.attr('string'),
@@ -19,4 +19,4 @@ CoughDrop.Webhook = DS.Model.extend({
   })
 });
 
-export default CoughDrop.Webhook;
+export default SweetSuite.Webhook;

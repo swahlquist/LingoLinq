@@ -1,8 +1,8 @@
 import DS from 'ember-data';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import { computed } from '@ember/object';
 
-CoughDrop.Userversion = DS.Model.extend({
+SweetSuite.Userversion = DS.Model.extend({
   modifier: DS.attr('raw'),
   created: DS.attr('date'),
   stats: DS.attr('raw'),
@@ -14,4 +14,4 @@ CoughDrop.Userversion = DS.Model.extend({
   })
 });
 
-export default CoughDrop.Userversion;
+export default SweetSuite.Userversion;

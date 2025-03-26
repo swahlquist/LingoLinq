@@ -4,13 +4,13 @@
     {{#if model.user.really_expired}}
       <h3>{{t "Purchase Update" key='subscription_update'}}</h3>
     {{else}}
-      <h3>{{t "Welcome to %app_name%!" key='welcome_to_coughdrop'}}</h3>
+      <h3>{{t "Welcome to %app_name%!" key='welcome_to_app'}}</h3>
     {{/if}}
   </div>
   <div class="modal-body" id="button_settings">
     {{#if model.user.really_expired}}
       <p>
-        {{t "Your %app_name% trial period has expired. Please update your billing settings to continue using CoughDrop." key='welcome_fill_out_subscription'}}
+        {{t "Your %app_name% trial period has expired. Please update your billing settings to continue using SweetSuite." key='welcome_fill_out_subscription'}}
       </p>
     {{else}}
       <img src={{if app_state.domain_settings.logo_url app_state.domain_settings.logo_url (path 'images/logo-big.png')}} style='float: left; height: 50px; margin: 0 10px 5px 0;'/>

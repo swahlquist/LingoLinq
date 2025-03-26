@@ -1,10 +1,10 @@
 import DS from 'ember-data';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import i18n from '../utils/i18n';
 import { observer } from '@ember/object';
 import { computed } from '@ember/object';
 
-CoughDrop.Gift = DS.Model.extend({
+SweetSuite.Gift = DS.Model.extend({
   didLoad: function() {
     this.update_gift_types();
   },
@@ -44,5 +44,5 @@ CoughDrop.Gift = DS.Model.extend({
   })
 });
 
-export default CoughDrop.Gift;
+export default SweetSuite.Gift;
 

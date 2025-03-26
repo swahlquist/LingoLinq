@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import EmberObject from '@ember/object';
 import RSVP from 'rsvp';
-import CoughDrop from '../../app';
+import SweetSuite from '../../app';
 import {
   context,
   describe,
@@ -16,7 +16,7 @@ import {
 import app_state from '../../utils/app_state';
 import capabilities from '../../utils/capabilities';
 import persistence from '../../utils/persistence';
-import coughDropExtras from '../../utils/extras';
+import sweetSuiteExtras from '../../utils/extras';
 import stashes from '../../utils/_stashes';
 import session from '../../utils/session';
 import buttonTracker from '../../utils/raw_events';
@@ -60,7 +60,7 @@ Ember.Test.JasmineAdapter = TestAdapter.extend({
 
 Ember.Test.adapter = Ember.Test.JasmineAdapter.create();
 
-CoughDrop.testing = true;
+SweetSuite.testing = true;
 
 var queryLog = [];
 queryLog.log = function(event) {
@@ -91,7 +91,7 @@ queryLog.respondAndLog = function(event, defaultResponse) {
       }
       if(found) {
         if(fixture.response._result && fixture.response._result.meta) {
-          coughDropExtras.meta_push({
+          sweetSuiteExtras.meta_push({
             method: event.method,
             model: event.type.modelName,
             id: event.id,
@@ -283,7 +283,7 @@ function db_wait(callback) {
       ready = true;
     });
   });
-  waitsFor(function() { return ready && coughDropExtras.ready; });
+  waitsFor(function() { return ready && sweetSuiteExtras.ready; });
   runs(function() {
     emberRun(_this, callback);
   });
@@ -429,7 +429,7 @@ beforeEach(function() {
   stub(session, 'reload', function() {
     session.reloaded = true;
   });
-  CoughDrop.ignore_filesystem = true;
+  SweetSuite.ignore_filesystem = true;
   capabilities.dbman = capabilities.dbman || capabilities.original_dbman;
   window.cough_drop_readiness = false;
   // TODO: https://alexlafroscia.com/ember-upgrade-to-new-qunit-api/
@@ -443,8 +443,8 @@ beforeEach(function() {
   persistence.sync_actions = null;
   stashes.set('online', true);
   app_state.reset();
-  CoughDrop.store = this.owner && this.owner.lookup('service:store');
-  CoughDrop.all_wait = false;
+  SweetSuite.store = this.owner && this.owner.lookup('service:store');
+  SweetSuite.all_wait = false;
 });
 
 afterEach(function() {
@@ -469,8 +469,8 @@ afterEach(function() {
     return ready;
   });
   runs(function() {
-    if(CoughDrop.app && CoughDrop.app.destroy) {
-      emberRun(CoughDrop.app, CoughDrop.app.destroy);
+    if(SweetSuite.app && SweetSuite.app.destroy) {
+      emberRun(SweetSuite.app, SweetSuite.app.destroy);
     }
   });
 });

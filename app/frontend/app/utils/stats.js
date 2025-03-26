@@ -1,11 +1,11 @@
 import Ember from 'ember';
 import EmberObject from '@ember/object';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import i18n from './i18n';
 import { observer } from '@ember/object';
 import { computed } from '@ember/object';
 
-CoughDrop.Stats = EmberObject.extend({
+SweetSuite.Stats = EmberObject.extend({
   no_data: computed('total_sessions', function() {
     return this.get('total_sessions') === undefined || this.get('total_sessions') === 0;
   }),
@@ -254,4 +254,4 @@ CoughDrop.Stats = EmberObject.extend({
   }),
 });
 
-export default CoughDrop.Stats;
+export default SweetSuite.Stats;

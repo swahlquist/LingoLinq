@@ -3,7 +3,7 @@ import { later as runLater } from '@ember/runloop';
 import RSVP from 'rsvp';
 import $ from 'jquery';
 import i18n from './i18n';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import persistence from './persistence';
 import app_state from './app_state';
 import stashes from './_stashes';
@@ -24,11 +24,11 @@ var obs_properties = [];
 types.forEach(function(type) {
   obs_properties.push('subscription.' + type);
 });
-var one_time_id = 'CoughDropiOSBundle';
-var long_term_id = 'CoughDropiOSPlusExtras';
-var eval_id = 'CoughDropiOSEval';
-var slp_id = 'CoughDropiOSSLP';
-var subscription_id = 'CoughDropiOSMonthly';
+var one_time_id = 'SweetSuiteiOSBundle';
+var long_term_id = 'SweetSuiteiOSPlusExtras';
+var eval_id = 'SweetSuiteiOSEval';
+var slp_id = 'SweetSuiteiOSSLP';
+var subscription_id = 'SweetSuiteiOSMonthly';
 
 var obs_func = function() {
   var _this = this;
@@ -70,16 +70,16 @@ var Subscription = EmberObject.extend({
     this.set('user_expiring', false);
 
     var now = window.moment()._d;
-    var sale = new Date(CoughDrop.sale * 1000);
+    var sale = new Date(SweetSuite.sale * 1000);
     if(sale && now && sale > now && !Subscription.product_types) {
-      this.set('sale', !!CoughDrop.sale);
+      this.set('sale', !!SweetSuite.sale);
       this.set('sale_ends', sale);
     }
     var _this = this;
     runLater(function() {
-      var sale = new Date(CoughDrop.sale * 1000);
+      var sale = new Date(SweetSuite.sale * 1000);
       if(sale && now && sale > now && !Subscription.product_types) {
-        _this.set('sale', !!CoughDrop.sale);
+        _this.set('sale', !!SweetSuite.sale);
         _this.set('sale_ends', sale);
       }
     }, 500);
@@ -165,7 +165,7 @@ var Subscription = EmberObject.extend({
         if(this.get('subscription_amount') == 'long_term_custom') {
           var amount = parseInt(this.get('subscription_custom_amount'), 10);
           return this.get('any_subscription_amount') || (amount > 100 && (amount % 50 === 0));
-        } else if(CoughDrop.sale && this.get('subscription_amount') == 'long_term_145') {
+        } else if(SweetSuite.sale && this.get('subscription_amount') == 'long_term_145') {
           return true;
         } else {
           return !!(this.get('email') && ['long_term_150', 'long_term_200', 'long_term_250', 'long_term_295'].indexOf(this.get('subscription_amount')) != -1);
@@ -566,7 +566,7 @@ var Subscription = EmberObject.extend({
     })
   },
   description: computed('user_type', 'subscription_type', 'extras', 'included_supporters', 'communicator_type', function() {
-    var res = i18n.t('coughdrop_license', "%app_name% license");
+    var res = i18n.t('app_license', "%app_name% license");
     if(this.get('user_type') == 'communicator') {
       if(this.get('eval')) {
         res = i18n.t('eval_sub', "%app_name% evaluation account");
@@ -748,7 +748,7 @@ Subscription.reopenClass({
       if(Subscription.handler.defer) {
       }
       Subscription.handler.open({
-        name: subscription.get('name') || subscription.get('user.name') || CoughDrop.app_name,
+        name: subscription.get('name') || subscription.get('user.name') || SweetSuite.app_name,
         description: subscription.get('description'),
         amount: amount,
         panelLabel: subscription.get('purchase_description'),
@@ -973,6 +973,6 @@ document.addEventListener("deviceready", function() {
   }
 }, false);
 
-CoughDrop.Subscription = Subscription;
+SweetSuite.Subscription = Subscription;
 
 export default Subscription;

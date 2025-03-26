@@ -17,7 +17,7 @@ describe('SearchController', 'controller:search', function() {
   });
 });
 // import Ember from 'ember';
-// import CoughDrop from '../app';
+// import SweetSuite from '../app';
 // import persistence from '../utils/persistence';
 // 
 // export default EmberObjectController.extend({
@@ -40,7 +40,7 @@ describe('SearchController', 'controller:search', function() {
 //     function loadBoards() {
 //       if(persistence.get('online')) {
 //         _this.set('online_results', {loading: true, results: []});
-//         CoughDrop.store.find('board', {q: str}).then(function(res) {
+//         SweetSuite.store.find('board', {q: str}).then(function(res) {
 //           _this.set('online_results', {results: res.content});
 //         }, function() { 
 //           _this.set('online_results', {results: []}); 

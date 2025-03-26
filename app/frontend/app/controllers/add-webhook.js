@@ -1,9 +1,9 @@
 import modal from '../utils/modal';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 
 export default modal.ModalController.extend({
   opening: function() {
-    var webhook = CoughDrop.store.createRecord('webhook', {
+    var webhook = SweetSuite.store.createRecord('webhook', {
       user_id: this.get('model.user.id'),
       webhook_type: 'user'
     });

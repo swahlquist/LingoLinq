@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import modal from '../../utils/modal';
 import i18n from '../../utils/i18n';
-import CoughDrop from '../../app';
+import SweetSuite from '../../app';
 
 export default Controller.extend({
   actions: {

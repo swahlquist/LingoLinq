@@ -1,10 +1,10 @@
 import { later as runLater } from '@ember/runloop';
 import DS from 'ember-data';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import persistence from '../utils/persistence';
 import { computed, set as emberSet } from '@ember/object';
 
-CoughDrop.Utterance = DS.Model.extend({
+SweetSuite.Utterance = DS.Model.extend({
   button_list: DS.attr('raw'),
   sentence: DS.attr('string'),
   link: DS.attr('string'),
@@ -27,11 +27,11 @@ CoughDrop.Utterance = DS.Model.extend({
       }
       return local;
     };
-    if(this.get('image_url') && !CoughDrop.remote_url(!this.get('image_url'))) {
+    if(this.get('image_url') && !SweetSuite.remote_url(!this.get('image_url'))) {
       this.set('image_url', find_remote(this.get('image_url')));
     }
     (this.get('button_list') || []).forEach(function(btn) {
-      if(btn.image && !CoughDrop.remote_url(!btn.image)) {
+      if(btn.image && !SweetSuite.remote_url(!btn.image)) {
         emberSet(btn, 'image', find_remote(btn.image));
       }
     });
@@ -56,4 +56,4 @@ CoughDrop.Utterance = DS.Model.extend({
   },
 });
 
-export default CoughDrop.Utterance;
+export default SweetSuite.Utterance;

@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import $ from 'jquery';
-import coughDropExtras from '../utils/extras';
+import sweetSuiteExtras from '../utils/extras';
 import app_state from '../utils/app_state';
 import modal from '../utils/modal';
 import capabilities from '../utils/capabilities';

@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import DS from 'ember-data';
 import $ from 'jquery';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import i18n from '../utils/i18n';
 import persistence from '../utils/persistence';
 import modal from '../utils/modal';
@@ -9,7 +9,7 @@ import Subscription from '../utils/subscription';
 import Utils from '../utils/misc';
 import { computed } from '@ember/object';
 
-CoughDrop.Organization = DS.Model.extend({
+SweetSuite.Organization = DS.Model.extend({
   didLoad: function() {
     this.set('total_licenses', this.get('allotted_licenses'));
     this.update_licenses_expire();
@@ -147,7 +147,7 @@ CoughDrop.Organization = DS.Model.extend({
     return res;
   })
 });
-CoughDrop.Organization.reopenClass({
+SweetSuite.Organization.reopenClass({
   mimic_server_processing: function(record, hash) {
     hash.organization.permissions = {
       "view": true,
@@ -158,4 +158,4 @@ CoughDrop.Organization.reopenClass({
   }
 });
 
-export default CoughDrop.Organization;
+export default SweetSuite.Organization;

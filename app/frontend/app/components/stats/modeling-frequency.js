@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import CoughDrop from '../../app';
+import SweetSuite from '../../app';
 import i18n from '../../utils/i18n';
 import { htmlSafe } from '@ember/string';
 import { observer } from '@ember/object';
@@ -27,7 +27,7 @@ export default Component.extend({
     var trends = this.get('trends');
     var elem = this.get('element').getElementsByClassName('modeling_frequency')[0];
 
-    CoughDrop.Visualizations.wait('word-graph', function() {
+    SweetSuite.Visualizations.wait('word-graph', function() {
       if(elem && trends && trends.weeks) {
         var weeks = [];
         for(var idx in trends.weeks) {

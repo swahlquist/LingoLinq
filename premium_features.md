@@ -1,7 +1,7 @@
 === Premium Features ===
 
 I keep forgetting the full list of features that require a premium 
-CoughDrop account, so I'm adding the list here. Basically we give users
+account, so I'm adding the list here. Basically we give users
 access to most premium features during the free trial or after they
 purchase an account. However, some premium features will turn off
 after the duration of a long-term purchase or the end of a subscription.

@@ -18,7 +18,7 @@ describe('ShareBoardController', 'controller:share-board', function() {
 });
 // import Ember from 'ember';
 // import modal from '../utils/modal';
-// import coughDropExtras from '../utils/extras';
+// import sweetSuiteExtras from '../utils/extras';
 // 
 // export default modal.ModalController.extend({
 //   needs: 'application',
@@ -26,7 +26,7 @@ describe('ShareBoardController', 'controller:share-board', function() {
 //     if(this.get('board.link')) {
 //       var _this = this;
 //       emberRun.later(function() {
-//         coughDropExtras.share.load({link: _this.get('board.link'), text: _this.get('board.name')});
+//         sweetSuiteExtras.share.load({link: _this.get('board.link'), text: _this.get('board.name')});
 //       });
 //     }
 //   },

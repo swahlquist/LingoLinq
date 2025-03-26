@@ -6,7 +6,7 @@ import { set as emberSet, get as emberGet } from '@ember/object';
 import { observer } from '@ember/object';
 import { computed } from '@ember/object';
 import persistence from '../utils/persistence';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import RSVP from 'rsvp';
 import Utils from '../utils/misc';
 
@@ -30,7 +30,7 @@ export default Component.extend({
           id: supervisee.id
         };
         supervisees.push(sup);
-        if(CoughDrop.remote_url(supervisee.avatar_url) && !supervisee.local_avatar_url) {
+        if(SweetSuite.remote_url(supervisee.avatar_url) && !supervisee.local_avatar_url) {
           persistence.find_url(supervisee.avatar_url, 'image').then(function(url) {
             emberSet(supervisee, 'local_avatar_url', url);
             emberSet(sup, 'image', url);

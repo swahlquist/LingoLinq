@@ -1,4 +1,4 @@
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import editManager from '../utils/edit_manager';
 import modal from '../utils/modal';
 import stashes from '../utils/_stashes';
@@ -31,11 +31,11 @@ export default modal.ModalController.extend({
     return "width: 33%; height: 100px; padding: 5px;";
   }),
   inner_button_style: computed('model.id', function() {
-    var height = 100 - CoughDrop.borderPad;
+    var height = 100 - SweetSuite.borderPad;
     return "height: " + height + "px;";
   }),
   image_style: computed('model.id', function() {
-    var height = 100 - CoughDrop.labelHeight - CoughDrop.boxPad;
+    var height = 100 - SweetSuite.labelHeight - SweetSuite.boxPad;
     return htmlSafe("height: " + height + "px;");
   })
 });

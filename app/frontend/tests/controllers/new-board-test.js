@@ -18,14 +18,14 @@ describe('NewBoardController', 'controller:new-board', function() {
 });
 // import Ember from 'ember';
 // import modal from '../utils/modal';
-// import CoughDrop from '../app';
+// import SweetSuite from '../app';
 // import app_state from '../utils/app_state';
 // import i18n from '../utils/i18n';
 // import editManager from '../utils/edit_manager';
 // 
 // export default modal.ModalController.extend({
 //   needs: 'application',
-//   license_options: CoughDrop.licenseOptions,
+//   license_options: SweetSuite.licenseOptions,
 //   attributable_license_type: function() {
 //     if(this.get('license') && this.get('license.type') != 'private') {
 //       this.set('license.author_name', app_state.get('currentUser.name'));
@@ -46,7 +46,7 @@ describe('NewBoardController', 'controller:new-board', function() {
 //     return this.get('speech');
 //   }.property('speech'),
 //   opening: function() {
-//     this.set('model', CoughDrop.store.createRecord('board', {public: true, license: {type: 'private'}, grid: {rows: 2, columns: 4}}));
+//     this.set('model', SweetSuite.store.createRecord('board', {public: true, license: {type: 'private'}, grid: {rows: 2, columns: 4}}));
 //     if(window.webkitSpeechRecognition) {
 //       var speech = new window.webkitSpeechRecognition();
 //       if(speech) {
@@ -221,7 +221,7 @@ describe('NewBoardController', 'controller:new-board', function() {
 //     saveBoard: function(event) {
 //       var _this = this;
 //       if(this.get('license')) {
-//         this.set('license.copyright_notice_url', CoughDrop.licenseOptions.license_url(this.get('license.type')));
+//         this.set('license.copyright_notice_url', SweetSuite.licenseOptions.license_url(this.get('license.type')));
 //       }
 //       this.get('model').save().then(function(board) {
 //         modal.close(true);
@@ -266,5 +266,5 @@ describe('NewBoardController', 'controller:new-board', function() {
 //     }
 //     this.set('showGrid', grid);
 //   }.observes('previewRows', 'previewColumns'),
-//   iconUrls: CoughDrop.iconUrls
+//   iconUrls: SweetSuite.iconUrls
 // });

@@ -1,6 +1,6 @@
 import modal from '../utils/modal';
 import i18n from '../utils/i18n';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import { computed } from '@ember/object';
 
 export default modal.ModalController.extend({

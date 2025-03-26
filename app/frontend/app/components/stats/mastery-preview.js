@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import CoughDrop from '../../app';
+import SweetSuite from '../../app';
 import i18n from '../../utils/i18n';
 import { htmlSafe } from '@ember/string';
 import { observer } from '@ember/object';

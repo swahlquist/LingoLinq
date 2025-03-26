@@ -61,6 +61,7 @@ class JobStash < ApplicationRecord
           'uid' => args[:user_integration].user_token(user),
           'anon_id' => user.anonymized_identifier,
           'details' => self.data['details'] || {},
+          'host' => JsonApi::Json.current_host
         }.to_json
       end
     end

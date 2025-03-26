@@ -1,4 +1,6 @@
 module Exporter
+  LOG_DIVIDER = 'quarter' # quarter, week, doy
+  LOG_CUTOFF = 500
   def self.export_logs(user_id, anonymized=false, zipper=nil, cutoff=nil)
     user = User.find_by_global_id(user_id)
     ext = anonymized ? '.obla' : '.obl'
@@ -9,15 +11,21 @@ module Exporter
     elsif cutoff
       sessions = sessions.where(['started_at > ?', cutoff])
     end
-    chunks = [sessions]
-    if sessions.count > 500
-      chunks = []
-      quarters = sessions.group("CONCAT(date_part('quarter', started_at), '-', date_part('year', started_at))").count("CONCAT(date_part('quarter', started_at), '-', date_part('year', started_at))")
+    chunks = []
+    if sessions.count > LOG_CUTOFF
+      puts " total sessions: #{sessions.count}"
+      quarters = sessions.group("CONCAT(date_part('#{LOG_DIVIDER}', started_at), '-', date_part('year', started_at))").count("CONCAT(date_part('#{LOG_DIVIDER}', started_at), '-', date_part('year', started_at))")
       quarters.each do |quarter, cnt|
         q, yr = quarter.split(/-/).map(&:to_i)
         if cnt > 0 && q && yr && yr > 2000 && yr <= Time.now.year
-          chunks << sessions.where(["date_part('year', started_at) = ? AND date_part('quarter', started_at) = ?", yr, q])
+          sessions.where(["date_part('year', started_at) = ? AND date_part('#{LOG_DIVIDER}', started_at) = ?", yr, q]).select('started_at, id').map(&:id).each_slice(100) do |session_ids|
+            chunks << session_ids
+          end
         end
+      end
+    else
+      sessions.select('id').map(&:id).each_slice(500) do |session_ids|
+        chunks << session_ids
       end
     end
     
@@ -36,8 +44,9 @@ module Exporter
     upload_res = nil
 
     chunks.each_with_index do |sub_sessions, idx|
-      puts "chunk #{idx}/#{chunks.length} for #{user.user_name}" if chunks.length > 1
-      hash = log_json(user, sub_sessions, anonymized)
+      puts "chunk #{idx + 1}/#{chunks.length} for #{user.user_name} (#{sub_sessions.count})" if chunks.length > 1
+      ss = LogSession.where(id: sub_sessions)
+      hash = log_json(user, ss, anonymized)
       chunk_fn = fn
       chunk_fn += "-#{idx}" if chunks.length > 1
       chunk_fn += ext
@@ -392,6 +401,7 @@ More information about the file formats being used is available at https://www.o
             'percent_x', 'percent_y'].each do |extra|
         e[extra] = event[extra] if event[extra] != nil
         e[extra] = event['button'][extra] if e[extra] == nil && event['button'] && event['button'][extra] != nil
+        e[extra].delete('timestamp') # orientation and maybe others extra-store timestamp, which should be removed
       end
       ['ip_address', 'ssid'].each do |extra|
         if anonymized && e[extra]
@@ -406,11 +416,12 @@ More information about the file formats being used is available at https://www.o
   end
     
   def self.note_session(log_session, session, session_id, anonymized)
+    author = log_session.author || log_session.user
     event = {
       id: "#{session_id}:note",
       timestamp: time_shift(log_session.started_at), 
-      author_name: log_session.author.user_name,
-      author_url: "#{JsonApi::Json.current_host}/#{log_session.author.user_name}",
+      author_name: author && author.user_name,
+      author_url: author && "#{JsonApi::Json.current_host}/#{author.user_name}",
       text: ''
     }
     if log_session.data['note']['text']

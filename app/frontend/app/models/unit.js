@@ -1,11 +1,11 @@
 import DS from 'ember-data';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import speecher from '../utils/speecher';
 import persistence from '../utils/persistence';
 import Utils from '../utils/misc';
 import { computed } from '@ember/object';
 
-CoughDrop.Unit = DS.Model.extend({
+SweetSuite.Unit = DS.Model.extend({
   settings: DS.attr('raw'),
   organization_id: DS.attr('string'),
   name: DS.attr('string'),
@@ -75,4 +75,4 @@ CoughDrop.Unit = DS.Model.extend({
   }
 });
 
-export default CoughDrop.Unit;
+export default SweetSuite.Unit;

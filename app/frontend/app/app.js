@@ -12,15 +12,15 @@ import config from './config/environment';
 import capabilities from './utils/capabilities';
 import i18n from './utils/i18n';
 import persistence from './utils/persistence';
-import coughDropExtras from './utils/extras';
+import sweetSuiteExtras from './utils/extras';
 import { computed } from '@ember/object';
 
 window.onerror = function(msg, url, line, col, obj) {
-  CoughDrop.track_error(msg + " (" + url + "-" + line + ":" + col + ")", false);
+  SweetSuite.track_error(msg + " (" + url + "-" + line + ":" + col + ")", false);
 };
 Ember.onerror = function(err) {
   if(err.stack) {
-    CoughDrop.track_error(err.message, err.stack);
+    SweetSuite.track_error(err.message, err.stack);
   } else {
     if(err.fakeXHR && (err.fakeXHR.status == 400 || err.fakeXHR.status == 404 || err.fakeXHR.status === 0)) {
       // should already be logged via "ember ajax error"
@@ -29,10 +29,10 @@ Ember.onerror = function(err) {
     } else if(err._result && err._result.fakeXHR && (err._result.fakeXHR.status == 400 || err._result.fakeXHR.status == 404 || err._result.fakeXHR.status === 0)) {
       // should already be logged via "ember ajax error"
     } else {
-      CoughDrop.track_error(JSON.stringify(err), false);
+      SweetSuite.track_error(JSON.stringify(err), false);
     }
   }
-  if(Ember.testing || CoughDrop.testing) {
+  if(Ember.testing || SweetSuite.testing) {
     throw(err);
   }
 };
@@ -50,18 +50,18 @@ var customEvents = {
     'select': 'select'
 };
 
-var CoughDrop = EmberApplication.extend({
+var SweetSuite = EmberApplication.extend({
   modulePrefix: config.modulePrefix,
   podModulePrefix: config.podModulePrefix,
   Resolver: Resolver,
   customEvents: customEvents,
   ready: function() {
-    CoughDrop.ready();
+    SweetSuite.ready();
   }
 });
-CoughDrop.ready = function() {
-  if(CoughDrop.readying) { return; }
-  CoughDrop.readying = true;
+SweetSuite.ready = function() {
+  if(SweetSuite.readying) { return; }
+  SweetSuite.readying = true;
   // remove the splash screen if showing
   if(capabilities.installed_app || (navigator && navigator.splashscreen && navigator.splashscreen.hide)) {
     var checkForFooter = function() {
@@ -80,25 +80,25 @@ CoughDrop.ready = function() {
   }
 }
 
-CoughDrop.grabRecord = persistence.DSExtend.grabRecord;
-CoughDrop.embedded = !!location.href.match(/embed=1/);
-CoughDrop.ad_referrer = (location.href.match(/\?ref=([^#]+)/) || [])[1];
-CoughDrop.referrer = document.referrer;
-CoughDrop.app_name = CoughDrop.app_name || (window.domain_settings || {}).app_name || "CoughDrop";
-CoughDrop.company_name = CoughDrop.company_name || (window.domain_settings || {}).company_name || "CoughDrop";
-CoughDrop.remote_url = function(url) {
+SweetSuite.grabRecord = persistence.DSExtend.grabRecord;
+SweetSuite.embedded = !!location.href.match(/embed=1/);
+SweetSuite.ad_referrer = (location.href.match(/\?ref=([^#]+)/) || [])[1];
+SweetSuite.referrer = document.referrer;
+SweetSuite.app_name = SweetSuite.app_name || (window.domain_settings || {}).app_name || window.default_app_name || "AAC App";
+SweetSuite.company_name = SweetSuite.company_name || (window.domain_settings || {}).company_name || window.defualt_company_name || "AAC Company";
+SweetSuite.remote_url = function(url) {
   return url && url.match(/^http/) && !url.match(/^http:\/\/localhost/);
 };
 
-CoughDrop.track_error = function(msg, stack) {
+SweetSuite.track_error = function(msg, stack) {
   var error = new Error();
   if(window._trackJs) {
     window._trackJs.track(msg);
   } else {
     console.error(msg, stack || error.stack);
   }
-  CoughDrop.errors = CoughDrop.errors || [];
-  CoughDrop.errors.push({
+  SweetSuite.errors = SweetSuite.errors || [];
+  SweetSuite.errors.push({
     message: msg,
     date: (new Date()),
     stack: stack === false ? null : (stack || error.stack)
@@ -111,9 +111,9 @@ if(capabilities.wait_for_deviceready) {
       if(done.completed) { return; }
       done.completed = true;
       if(window.kvstash) {
-        console.debug('COUGHDROP: found native key value store');
+        console.debug('SWEETSUITE: found native key value store');
       }
-      coughDropExtras.advance('device');
+      sweetSuiteExtras.advance('device');
     };
     // Look up the stashed user name, which is needed for bootstrapping session and user data
     // and possibly is getting lost being set just in a cookie and localStorage
@@ -166,18 +166,18 @@ if(capabilities.wait_for_deviceready) {
         }, function(err) {
           make_stash(null);
         }, klass, 'getString', ['user_name']);
-      }, done, klass, 'getSharedPreferences', ['coughdrop_prefs', 'MODE_PRIVATE']);
+      }, done, klass, 'getSharedPreferences', ['sweetsuite_prefs', 'MODE_PRIVATE']);
       RunLater(done, 500);
     } else {
       done();
     }
   });
 } else {
-  coughDropExtras.advance('device');
+  sweetSuiteExtras.advance('device');
 }
 
 
-loadInitializers(CoughDrop, config.modulePrefix);
+loadInitializers(SweetSuite, config.modulePrefix);
 
 DS.Model.reopen({
   reload: function(ignore_local) {
@@ -229,7 +229,7 @@ Route.reopen({
     var controller = this.controllerFor(this.routeName);
     var title = this.get('title') || (controller && controller.get('title'));
     if(title) {
-      CoughDrop.controller.updateTitle(title.toString());
+      SweetSuite.controller.updateTitle(title.toString());
     }
   },
   activate: function() {
@@ -244,7 +244,7 @@ Route.reopen({
   }
 });
 
-CoughDrop.clean_path = function(str) {
+SweetSuite.clean_path = function(str) {
   str = str.replace(/^\s+/, '').replace(/\s+$/, '');
   if(str.length == 0) { str = "_"; }
   if(str.match(/^\d/)) { str + "_" + str; }
@@ -253,18 +253,18 @@ CoughDrop.clean_path = function(str) {
   return str;  
 };
 
-CoughDrop.licenseOptions = [
+SweetSuite.licenseOptions = [
   {name: i18n.t('private_license', "Private (no reuse allowed)"), id: 'private'},
   {name: i18n.t('cc_by_license', "CC By (attribution only)"), id: 'CC By', url: 'https://creativecommons.org/licenses/by/4.0/'},
   {name: i18n.t('cc_by_sa_license', "CC By-SA (attribution + share-alike)"), id: 'CC By-SA', url: 'https://creativecommons.org/licenses/by-sa/4.0/'},
   {name: i18n.t('public_domain_license', "Public Domain"), id: 'public domain', url: 'https://creativecommons.org/publicdomain/zero/1.0/'}
 ];
-CoughDrop.publicOptions = [
+SweetSuite.publicOptions = [
   {name: i18n.t('private', "Private"), id: 'private'},
   {name: i18n.t('public', "Public"), id: 'public'},
   {name: i18n.t('unlisted', "Unlisted"), id: 'unlisted'}
 ];
-CoughDrop.board_categories = [
+SweetSuite.board_categories = [
   {name: i18n.t('robust_vocabularies', "Robust Vocabularies"), id: 'robust'},
   {name: i18n.t('cause_and_effect', "Cause and Effect"), id: 'cause_effect'},
   {name: i18n.t('simple_starters', "Simple Starters"), id: 'simple_starts'},
@@ -272,7 +272,7 @@ CoughDrop.board_categories = [
   {name: i18n.t('phrase_based', "Phrase-Based"), id: 'phrases'},
   {name: i18n.t('keyboards', "Keyboards"), id: 'keyboards'},
 ];
-CoughDrop.registrationTypes = [
+SweetSuite.registrationTypes = [
   {name: i18n.t('pick_type', "[ this login is mainly for ]"), id: ''},
   {name: i18n.t('registration_type_communicator', "A communicator"), id: 'communicator'},
   {name: i18n.t('registration_type_parent_communicator', "A parent and communicator"), id: 'communicator'},
@@ -282,7 +282,7 @@ CoughDrop.registrationTypes = [
   {name: i18n.t('registration_type_teacher', "A teacher"), id: 'teacher'},
   {name: i18n.t('registration_type_other', "An aide, caregiver or other supporter"), id: 'other'}
 ];
-CoughDrop.user_statuses = [
+SweetSuite.user_statuses = [
   {id: 'unchecked', label: i18n.t('unknown_nothing', "Unknown/Nothing"), on: true},
   {id: 'hourglass', label: i18n.t('waiting_for_evaluation', "Waiting for Evaluation"), on: true},
   {id: 'equalizer', label: i18n.t('waiting_for_results', "Waiting for Recommendation from Eval"), on: true},
@@ -299,7 +299,7 @@ CoughDrop.user_statuses = [
   {id: 'apple'},
   {id: 'blackboard'},
 ];
-CoughDrop.access_methods = {
+SweetSuite.access_methods = {
   touch: 'hand-up',
   axis_scanning: 'screenshot',
   scanning: 'barcode',
@@ -312,7 +312,7 @@ CoughDrop.access_methods = {
 };
 
 
-CoughDrop.board_levels = [
+SweetSuite.board_levels = [
   {name: i18n.t('unspecified_empty', "[  ]"), id: ''},
   {name: i18n.t('level_1', "1 - Minimal Targets"), id: '1'},
   {name: i18n.t('level_2', "2 - Basic Core"), id: '2'},
@@ -325,7 +325,7 @@ CoughDrop.board_levels = [
   {name: i18n.t('level_9', "9 - Robust Core and Fringe"), id: '9'},
   {name: i18n.t('level_10', "10 - Full Vocabulary"), id: '10'},
 ];    
-CoughDrop.parts_of_speech = [
+SweetSuite.parts_of_speech = [
   {name: i18n.t('unspecified', "Unspecified"), id: ''},
   {name: i18n.t('noun', "Noun (dog, Dad)"), id: 'noun'},
   {name: i18n.t('verb', "Verb (jump, fly)"), id: 'verb'},
@@ -349,7 +349,7 @@ CoughDrop.parts_of_speech = [
 
 // derived from http://praacticalaac.org/strategy/communication-boards-colorful-considerations/
 // and http://talksense.weebly.com/cbb-8-colour.html
-CoughDrop.keyed_colors = [
+SweetSuite.keyed_colors = [
   {border: "#ccc", fill: "#fff", color: i18n.t('white', "White"), types: ['conjunction', 'number']},
   {border: "#dd0", fill: "#ffa", color: i18n.t('yellow', "Yellow"), hint: i18n.t('people', "people"), types: ['pronoun']},
   {border: "#6d0", fill: "#cfa", color: i18n.t('green', "Green"), hint: i18n.t('actions_lower', "actions"), types: ['verb']},
@@ -363,7 +363,7 @@ CoughDrop.keyed_colors = [
   {fill: 'rgb(115, 204, 255)', color: i18n.t('bluish', "Bluish"), hint: i18n.t('other_lower', "other"), types: []},
   {fill: "#000", color: i18n.t('black', "Black"), hint: i18n.t('contrast_lower', "contrast"), types: []}
 ];
-CoughDrop.extra_keyed_colors = [
+SweetSuite.extra_keyed_colors = [
   {border: '#0069e7', fill: '#9fceef', label: 'adj1'},
   {border: '#0069e7', fill: '#e0edf9', label: 'adj2'},
   {border: '#1086e9', fill: '#a0cfee', label: 'adjf'},
@@ -394,16 +394,16 @@ CoughDrop.extra_keyed_colors = [
   {border: '#ff2f25', fill: '#f3a4a4', label: 'else'}
 ];
 
-CoughDrop.licenseOptions.license_url = function(id) {
-  for(var idx = 0; idx < CoughDrop.licenseOptions.length; idx++) {
-    if(CoughDrop.licenseOptions[idx].id == id) {
-      return CoughDrop.licenseOptions[idx].url;
+SweetSuite.licenseOptions.license_url = function(id) {
+  for(var idx = 0; idx < SweetSuite.licenseOptions.length; idx++) {
+    if(SweetSuite.licenseOptions[idx].id == id) {
+      return SweetSuite.licenseOptions[idx].url;
     }
   }
   return "";
 };
 
-CoughDrop.iconUrls = [
+SweetSuite.iconUrls = [
     {alt: 'house', url: 'https://opensymbols.s3.amazonaws.com/libraries/mulberry/house.svg'},
     {alt: 'food', url: 'https://opensymbols.s3.amazonaws.com/libraries/mulberry/food.svg'},
     {alt: 'verbs', url: 'https://opensymbols.s3.amazonaws.com/libraries/arasaac/verbs.png'},
@@ -431,7 +431,7 @@ CoughDrop.iconUrls = [
     {alt: 'phone', url: 'https://opensymbols.s3.amazonaws.com/libraries/arasaac/mobile%20phone.png'},
     {alt: 'board', url: 'https://opensymbols.s3.amazonaws.com/libraries/arasaac/board_3.png'}
 ];
-CoughDrop.avatarUrls = [
+SweetSuite.avatarUrls = [
   {alt: 'happy female', url: 'https://opensymbols.s3.amazonaws.com/libraries/arasaac/happy.png'},
   {alt: 'happy', url: 'https://opensymbols.s3.amazonaws.com/libraries/arasaac/happy%20look_1.png'},
   {alt: 'teacher', url: 'https://opensymbols.s3.amazonaws.com/libraries/arasaac/teacher%20(female).png'},
@@ -489,29 +489,29 @@ CoughDrop.avatarUrls = [
   {alt: 'zombie', url: 'https://opensymbols.s3.amazonaws.com/libraries/language-craft/zombie.png'},
   {alt: 'stegosaurus', url: 'https://opensymbols.s3.amazonaws.com/libraries/language-craft/stegosaurus.png'}
 ];
-CoughDrop.Lessons = {
+SweetSuite.Lessons = {
   track: function(url) {
     return new RSVP.Promise(function(resolve, reject) {
-      var lesson = CoughDrop.Lessons.assert_lesson();
+      var lesson = SweetSuite.Lessons.assert_lesson();
       lesson.restart(url);
     });
   },
   assert_lesson: function() {
-    CoughDrop.Lessons.lesson = CoughDrop.Lessons.lesson || EmberObject.extend({
+    SweetSuite.Lessons.lesson = SweetSuite.Lessons.lesson || EmberObject.extend({
       restart: function(url) {
         this.set('state', null);
       }
     }).create();
   }
 };
-CoughDrop.Videos = {
+SweetSuite.Videos = {
   players: {},
   track: function(dom_id, callback) {
     return new RSVP.Promise(function(resolve, reject) {
-      CoughDrop.Videos.waiting = CoughDrop.Videos.waiting || {};
-      CoughDrop.Videos.waiting[dom_id] = CoughDrop.Videos.waiting[dom_id] || [];
+      SweetSuite.Videos.waiting = SweetSuite.Videos.waiting || {};
+      SweetSuite.Videos.waiting[dom_id] = SweetSuite.Videos.waiting[dom_id] || [];
       var found = false;
-      CoughDrop.Videos.waiting[dom_id].push(function(player) {
+      SweetSuite.Videos.waiting[dom_id].push(function(player) {
         found = true;
         if(callback) {
           player.addListener(callback);
@@ -525,19 +525,19 @@ CoughDrop.Videos = {
     });
   },
   untrack: function(dom_id, callback) {
-    var player = CoughDrop.Videos.players[dom_id];
+    var player = SweetSuite.Videos.players[dom_id];
     if(player) {
       player.removeListener(callback);
     }
   },
   player_ready: function(dom, window) {
     if(!dom.id) { return; }
-    if(CoughDrop.Videos.players[dom.id] && CoughDrop.Videos.players[dom.id]._dom == dom) {
+    if(SweetSuite.Videos.players[dom.id] && SweetSuite.Videos.players[dom.id]._dom == dom) {
       return;
     }
     console.log("initializing player", dom.id);
-    if(CoughDrop.Videos.players[dom.id]) {
-      CoughDrop.Videos.players[dom.id].cleanup();
+    if(SweetSuite.Videos.players[dom.id]) {
+      SweetSuite.Videos.players[dom.id].cleanup();
     }
     var player = EmberObject.extend({
       _target_window: window,
@@ -569,12 +569,12 @@ CoughDrop.Videos = {
         });
       }
     }).create({state: 'initialized'});
-    CoughDrop.Videos.players[dom.id] = player;
-    CoughDrop.Videos.waiting = CoughDrop.Videos.waiting || {};
-    (CoughDrop.Videos.waiting[dom.id] || []).forEach(function(callback) {
+    SweetSuite.Videos.players[dom.id] = player;
+    SweetSuite.Videos.waiting = SweetSuite.Videos.waiting || {};
+    (SweetSuite.Videos.waiting[dom.id] || []).forEach(function(callback) {
       callback(player);
     });
-    CoughDrop.Videos.waiting[dom.id] = [];
+    SweetSuite.Videos.waiting[dom.id] = [];
   },
   player_status: function(event) {
     var frame = null;
@@ -590,8 +590,8 @@ CoughDrop.Videos = {
       }
     }
     if(frame && frame.id) {
-      CoughDrop.Videos.player_ready(frame, event.source);
-      var player = CoughDrop.Videos.players[frame.id];
+      SweetSuite.Videos.player_ready(frame, event.source);
+      var player = SweetSuite.Videos.players[frame.id];
       if(player) {
         if(event.data && event.data.time !== undefined) {
           player.set('time', event.data.time);
@@ -629,27 +629,27 @@ window.addEventListener('message', function(event) {
       var dom_id = frame.id;
       var elem = frame;
       event.frameRef = frame;
-      CoughDrop.Videos.player_status(event);
+      SweetSuite.Videos.player_status(event);
     }
   } else if(event.data && event.data.lesson_status) {
-    var lesson = CoughDrop.Lessons.assert_lesson();
+    var lesson = SweetSuite.Lessons.assert_lesson();
     lesson.set('duration', event.data.duration);
     lesson.set('state', event.data.state);
   }
 });
 
 
-// CoughDrop.YT = {
+// SweetSuite.YT = {
 //   track: function(player_id, callback) {
 //     return new RSVP.Promise(function(resolve, reject) {
-//       if(!CoughDrop.YT.ready) {
+//       if(!SweetSuite.YT.ready) {
 //         var tag = document.createElement('script');
 //         tag.src = "https://www.youtube.com/iframe_api";
 //         var firstScriptTag = document.getElementsByTagName('script')[0];
 //         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 //         window.onYouTubeIframeAPIReady = function() {
-//           CoughDrop.YT.ready = true;
-//           CoughDrop.YT.track(player_id, callback).then(function(player) {
+//           SweetSuite.YT.ready = true;
+//           SweetSuite.YT.track(player_id, callback).then(function(player) {
 //             resolve(player);
 //           }, function() { reject('no_player'); });
 //         };
@@ -708,15 +708,15 @@ window.addEventListener('message', function(event) {
 //               }
 //             }
 //           }));
-//           CoughDrop.YT.players = CoughDrop.YT.players || [];
-//           CoughDrop.YT.players.push(player);
+//           SweetSuite.YT.players = SweetSuite.YT.players || [];
+//           SweetSuite.YT.players.push(player);
 //           resolve(player);
 //         }, 200);
 //       }
 //     });
 //   },
 //   poll: function() {
-//     (CoughDrop.YT.players || []).forEach(function(player) {
+//     (SweetSuite.YT.players || []).forEach(function(player) {
 //       if(!player.get('disabled')) {
 //         var p = player.get('_player');
 //         if(p && p.getDuration) {
@@ -739,40 +739,40 @@ window.addEventListener('message', function(event) {
 //         }
 //       }
 //     });
-//     RunLater(CoughDrop.YT.poll, 100);
+//     RunLater(SweetSuite.YT.poll, 100);
 //   }
 // };
 // if(!Ember.testing) {
-//   RunLater(CoughDrop.YT.poll, 500);
+//   RunLater(SweetSuite.YT.poll, 500);
 // }
 
-CoughDrop.Visualizations = {
+SweetSuite.Visualizations = {
   wait: function(name, callback) {
-    if(!CoughDrop.Visualizations.ready) {
-      CoughDrop.Visualizations.callbacks = CoughDrop.Visualizations.callbacks || [];
-//       var found = CoughDrop.Visualizations.callbacks.find(function(cb) { return cb.name == name; });
+    if(!SweetSuite.Visualizations.ready) {
+      SweetSuite.Visualizations.callbacks = SweetSuite.Visualizations.callbacks || [];
+//       var found = SweetSuite.Visualizations.callbacks.find(function(cb) { return cb.name == name; });
 //       if(!found) {
-        CoughDrop.Visualizations.callbacks.push({
+        SweetSuite.Visualizations.callbacks.push({
           name: name,
           callback: callback
         });
 //       }
-      CoughDrop.Visualizations.init();
+      SweetSuite.Visualizations.init();
     } else {
       callback();
     }
   },
   handle_callbacks: function() {
-    CoughDrop.Visualizations.initializing = false;
-    CoughDrop.Visualizations.ready = true;
-    (CoughDrop.Visualizations.callbacks || []).forEach(function(obj) {
+    SweetSuite.Visualizations.initializing = false;
+    SweetSuite.Visualizations.ready = true;
+    (SweetSuite.Visualizations.callbacks || []).forEach(function(obj) {
       obj.callback();
     });
-    CoughDrop.Visualizations.callbacks = [];
+    SweetSuite.Visualizations.callbacks = [];
   },
   init: function() {
-    if(CoughDrop.Visualizations.initializing || CoughDrop.Visualizations.ready) { return; }
-    CoughDrop.Visualizations.initializing = true;
+    if(SweetSuite.Visualizations.initializing || SweetSuite.Visualizations.ready) { return; }
+    SweetSuite.Visualizations.initializing = true;
     if(!window.google || !window.google.visualization || !window.google.maps) {
       var script = document.createElement('script');
       script.type = 'text/javascript';
@@ -785,7 +785,7 @@ CoughDrop.Visualizations = {
               one_done('both');
             }, 500);
           } else {
-            window.google.charts.load('current', {packages:["corechart", "sankey"], callback: CoughDrop.Visualizations.handle_callbacks});
+            window.google.charts.load('current', {packages:["corechart", "sankey"], callback: SweetSuite.Visualizations.handle_callbacks});
           }
         }
       };
@@ -810,36 +810,36 @@ CoughDrop.Visualizations = {
           'callback=ready_to_do_maps&key=' + window.maps_key;
       document.body.appendChild(script);
     } else {
-      RunLater(CoughDrop.Visualizations.handle_callbacks);
+      RunLater(SweetSuite.Visualizations.handle_callbacks);
     }
 
   }
 };
 
-CoughDrop.boxPad = 17;
-CoughDrop.borderPad = 5;
-CoughDrop.labelHeight = 15;
-CoughDrop.customEvents = customEvents;
-CoughDrop.expired = function() {
+SweetSuite.boxPad = 17;
+SweetSuite.borderPad = 5;
+SweetSuite.labelHeight = 15;
+SweetSuite.customEvents = customEvents;
+SweetSuite.expired = function() {
   var keys = window.app_version.match(/(\d+)\.(\d+)\.(\d+)/);
   var version = parseInt(keys[1] + keys[2] + keys[3], 10);
   var now = parseInt(window.moment().format('YYYYMMDD'), 10);
   var diff = now - version;
   return diff > 30;
 };
-CoughDrop.log = {
+SweetSuite.log = {
   start: function() {
-    CoughDrop.log.started = (new Date()).getTime();
+    SweetSuite.log.started = (new Date()).getTime();
   },
   track: function(msg) {
-    if(!CoughDrop.loggy) { return; }
+    if(!SweetSuite.loggy) { return; }
     var now = (new Date()).getTime();
-    if(CoughDrop.log.started) {
-      console.debug("TRACK:" + msg, now - CoughDrop.log.started);
+    if(SweetSuite.log.started) {
+      console.debug("TRACK:" + msg, now - SweetSuite.log.started);
     }
   }
 };
-window.CoughDrop = CoughDrop;
-window.CoughDrop.VERSION = window.app_version;
+window.SweetSuite = SweetSuite;
+window.SweetSuite.VERSION = window.app_version;
 
-export default CoughDrop;
+export default SweetSuite;

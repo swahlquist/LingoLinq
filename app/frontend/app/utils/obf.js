@@ -6,7 +6,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 **/
 
 import EmberObject from '@ember/object';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 import evaluation from './eval';
 import emergency from './obf-emergency';
 import { later as runLater } from '@ember/runloop';
@@ -18,7 +18,7 @@ var obf = EmberObject.extend({
   parse: function(json, fallback_key) {
     var hash = JSON.parse(json);
     var id = (hash['id'] || 'b123') + 'b' + (new Date()).getTime() + "x" + Math.round(Math.random() * 9999);
-    var board = CoughDrop.store.push({data: {
+    var board = SweetSuite.store.push({data: {
       id: id,
       type: 'board',
       attributes: {}
@@ -41,7 +41,7 @@ var obf = EmberObject.extend({
     hash['background'] = hash['background'] || {};
     board.set('background', {
       image: hash['background']['image'] || hash['background']['image_url'],
-      image_exclusion: hash['background']['ext_coughdrop_image_exclusion'],
+      image_exclusion: hash['background']['ext_sweetsuite_image_exclusion'],
       color: hash['background']['color'],
       position: hash['background']['position'],
       text: hash['background']['text'],
@@ -122,7 +122,7 @@ var obf = EmberObject.extend({
       if(button.image) {
         var img = Object.assign({}, button.image);
         img.id = "tmpimg_" + (++obf.id_index);
-        var existing = CoughDrop.store.peekRecord('image', img.id);
+        var existing = SweetSuite.store.peekRecord('image', img.id);
         if(existing && existing.get('incomplete')) {
           existing.set('url', img.url);
         }
@@ -133,7 +133,7 @@ var obf = EmberObject.extend({
       if(button.sound) {
         var snd = Object.assign({}, button.sound);
         snd.id = "tmpsnd_" + (++obf.id_index);
-        var existing = CoughDrop.store.peekRecord('sound', img.id);
+        var existing = SweetSuite.store.peekRecord('sound', img.id);
         if(existing && existing.get('incomplete')) {
           existing.set('url', snd.url);
         }
@@ -160,7 +160,7 @@ obf.register("stars", function(key) {
   var board_id = parts[1];
   var user = app_state.get('sessionUser');
   if(user_id && user_id != 'self') {
-    user = CoughDrop.store.peekRecord('user', user_id);
+    user = SweetSuite.store.peekRecord('user', user_id);
     if(!user || !user.get('permissions.supervise')) {
       // TODO: error message
     }

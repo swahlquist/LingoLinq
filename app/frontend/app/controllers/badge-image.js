@@ -4,7 +4,7 @@ import app_state from '../utils/app_state';
 import i18n from '../utils/i18n';
 import persistence from '../utils/persistence';
 import editManager from '../utils/edit_manager';
-import CoughDrop from '../app';
+import SweetSuite from '../app';
 
 export default modal.ModalController.extend({
   opening: function() {

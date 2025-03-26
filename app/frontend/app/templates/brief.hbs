@@ -32,9 +32,9 @@
     <span id="nav_header">
     <h1 class={{if app_state.currentBoardState 'with_board'}}>
       <a href="#" {{action "index"}}>
-        <img src={{if app_state.domain_settings.logo_url app_state.domain_settings.logo_url (path 'images/logo-big.png')}} alt="CoughDrop"/>
+        <img src={{if app_state.domain_settings.logo_url app_state.domain_settings.logo_url (path 'images/logo-big.png')}} alt="SweetSuite"/>
         <span>
-          {{t "%app_name_upper%" key="coughdrop_upper"}}
+          {{t "%app_name_upper%" key="app_name_upper"}}
         </span>
         <span class="label label-primary">{{t "BETA" key='beta'}}</span>
       </a>
@@ -423,7 +423,7 @@
     <div class="wide_links">
       <div class="row">
         <div class='col-sm-4'>
-          <span style="color: #888; padding-right: 10px;">{{t "%app_name%" key='coughdrop'}}</span>
+          <span style="color: #888; padding-right: 10px;">{{t "%app_name%" key='app_name'}}</span>
           {{#if app_state.installed_app}}
             <a href="https://www.mycoughdrop.com" target="_blank">{{t "Web Site" key='web_site'}}</a> <span class='text-muted'>|</span>
           {{/if}}
@@ -445,7 +445,7 @@
         </div>
         <div class='col-sm-3 col-sm-offset-3' style="text-align: right;">
           {{#unless app_state.installed_app}}
-            <a href="https://github.com/CoughDrop" target="_blank">{{t "Developers" key='developers'}}</a> <span class='text-muted'>|</span>
+            <a href="https://github.com/SweetSuite" target="_blank">{{t "Developers" key='developers'}}</a> <span class='text-muted'>|</span>
           {{/unless}}
           {{#link-to "privacy"}}{{t "Privacy" key='privacy'}}{{/link-to}} <span class='text-muted'>|</span>
           {{#link-to "terms"}}{{t "Terms" key='terms'}}{{/link-to}}
