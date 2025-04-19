@@ -420,6 +420,10 @@ describe Api::SearchController, :type => :controller do
       def on_complete(&block)
         @complete_block = block
       end
+
+      def url
+        "whatevs"
+      end
       
       def run
         code = 200 if @header_ok == true

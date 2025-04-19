@@ -404,10 +404,11 @@ module UpstreamDownstream
     (self.grid_buttons || []).each do |button|
       if button['load_board'] && button['load_board']['id'] && button['id'] && button['load_board']['id'] != self.global_id
         if !['home', 'top board'].include?((button['label'] || 'none').downcase)
-          if self.settings['copy_id'] && button['load_board']['id'] == self.settings['copy_id']
-          else
+          # This was some optimization to prevent crazy loops in the Forbes boards
+          # if self.settings['copy_id'] && button['load_board']['id'] == self.settings['copy_id']
+          # else
             downs << button['load_board']['id']
-          end
+          # end
         end
       end
     end

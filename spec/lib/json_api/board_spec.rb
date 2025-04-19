@@ -107,8 +107,14 @@ describe JsonApi::Board do
       b.settings['buttons'] = [
         {'id' => 1, 'label' => 'parasol', 'image_id' => i.global_id}
       ]
+      b.settings['grid'] = {
+        'rows' => 1,
+        'columns' => 1,
+        'order' => [[1]]
+      }
       b.instance_variable_set('@buttons_changed', true)
       b.save
+      b.instance_variable_set('@button_images', nil)
       expect(b.known_button_images.count).to eq(1)
       
       hash = JsonApi::Board.as_json(b.reload, :wrapper => true)
@@ -134,6 +140,7 @@ describe JsonApi::Board do
       ]
       b.instance_variable_set('@buttons_changed', true)
       b.save
+      b.instance_variable_set('@button_images', nil)
       expect(b.known_button_images.count).to eq(1)
       
       hash = JsonApi::Board.as_json(b.reload, :wrapper => true)

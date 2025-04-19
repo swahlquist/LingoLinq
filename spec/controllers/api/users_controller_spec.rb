@@ -529,9 +529,8 @@ describe Api::UsersController, :type => :controller do
     
     it "should not update device-specific settings if not for the current user" do
       token_user
-      @user2 = User.create(:settings => {'supervisors' => [{'user_id' => @user.global_id, 'edit_permission' => true}]})
-      @user.settings['supervisees'] = [{'user_id' => @user2.global_id, 'edit_permission' => true}]
-      @user.save
+      @user2 = User.create
+      User.link_supervisor_to_user(@user, @user2, nil, true)
       expect(@user.supervisor_for?(@user2)).to eq(true)
       post :update, params: {:id => @user2.global_id, :user => {:name => 'bob', :preferences => {:device => {:a => 1}}}}
       expect(response).to be_successful
@@ -1242,7 +1241,8 @@ describe Api::UsersController, :type => :controller do
     
     it "should require delete permission" do
       token_user
-      @user2 = User.create(:settings => {'supervisors' => [{'user_id' => @user.global_id, 'edit_permission' => true}]})
+      @user2 = User.create
+      User.link_supervisor_to_user(@user, @user2, nil, true)
       expect(@user.supervisor_for?(@user2)).to eq(true)
       post :flush_logs, params: {:user_id => @user2.global_id}
       assert_unauthorized
@@ -1284,7 +1284,8 @@ describe Api::UsersController, :type => :controller do
     
     it "should require delete permission" do
       token_user
-      @user2 = User.create(:settings => {'supervisors' => [{'user_id' => @user.global_id, 'edit_permission' => true}]})
+      @user2 = User.create
+      User.link_supervisor_to_user(@user, @user2, nil, true)
       expect(@user.supervisor_for?(@user2)).to eq(true)
       post :flush_user, params: {:user_id => @user2.global_id}
       assert_unauthorized

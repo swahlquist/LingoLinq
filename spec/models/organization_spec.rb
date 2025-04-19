@@ -291,69 +291,55 @@ describe Organization, :type => :model do
   
   describe "user types" do
     it "should correctly identify sponsored_user?" do
-      o = Organization.create
-      u = User.new
-      u.settings = {'managed_by' => {}}
-      u.settings['managed_by'][o.global_id] = {'sponsored' => true, 'pending' => false}
-      u.save
-      expect(o.sponsored_user?(u)).to eq(true)
+      o = Organization.create(:settings => {:total_licenses => 1})
+      u = User.create
+      o.add_user(u.user_name, false, true)
+      expect(o.reload.sponsored_user?(u.reload)).to eq(true)
     end
     
     it "should correctly identify manager?" do
       o = Organization.create
-      u = User.new
-      u.settings = {'manager_for' => {}}
-      u.settings['manager_for'][o.global_id] = {'full_manager' => true}
-      u.save
+      u = User.create
+      o.add_manager(u.user_name, true)
       expect(o.manager?(u)).to eq(true)
       expect(o.assistant?(u)).to eq(true)
     end
     
     it "should correctly identify assistant?" do
       o = Organization.create
-      u = User.new
-      u.settings = {'manager_for' => {}}
-      u.settings['manager_for'][o.global_id] = {'full_manager' => false}
-      u.save
+      u = User.create
+      o.add_manager(u.user_name, false)
       expect(o.manager?(u)).to eq(false)
       expect(o.assistant?(u)).to eq(true)
     end
     
     it "should correctly identify supervisor?" do
       o = Organization.create
-      u = User.new
-      u.settings = {'supervisor_for' => {}}
-      u.settings['supervisor_for'][o.global_id] = {'pending' => false}
-      u.save
+      u = User.create
+      o.add_supervisor(u.user_name, false)
       expect(o.supervisor?(u)).to eq(true)
       expect(o.pending_supervisor?(u)).to eq(false)
     end
 
     it "should correctly identify pending_supervisor?" do
       o = Organization.create
-      u = User.new
-      u.settings = {'supervisor_for' => {}}
-      u.settings['supervisor_for'][o.global_id] = {'pending' => true}
-      u.save
+      u = User.create
+      o.add_supervisor(u.user_name, true)
       expect(o.supervisor?(u)).to eq(true)
       expect(o.pending_supervisor?(u)).to eq(true)
     end
     
     it "should correctly identify managed_user?" do
       o = Organization.create
-      u = User.new
-      u.settings = {'managed_by' => {}}
-      u.settings['managed_by'][o.global_id] = {'pending' => false, 'sponsored' => false}
-      u.save
+      u = User.create
+      o.add_user(u.user_name, false, false)
       expect(o.managed_user?(u)).to eq(true)
     end
     
     it "should correctly identify pending_user?" do
       o = Organization.create
-      u = User.new
-      u.settings = {'managed_by' => {}}
-      u.settings['managed_by'][o.global_id] = {'pending' => true, 'sponsored' => false}
-      u.save
+      u = User.create
+      o.add_user(u.user_name, true, false)
       expect(o.pending_user?(u)).to eq(true)
     end
   end
@@ -447,9 +433,7 @@ describe Organization, :type => :model do
     it "should update a user's expires_at when they are removed" do
       o = Organization.create(:settings => {'total_licenses' => 1})
       u = User.create(:expires_at => Time.now + 100, :settings => {'subscription' => {'org_sponsored' => true, 'seconds_left' => 3.weeks.to_i}})
-      u.settings['managed_by'] = {}
-      u.settings['managed_by'][o.global_id] = {'sponsored' => true, 'pending' => false}
-      u.save
+      o.add_user(u.user_name, false, true)
       o.remove_user(u.user_name)
       u.reload
       expect(u.settings['subscription_left']) == nil
@@ -475,9 +459,7 @@ describe Organization, :type => :model do
     it "should not update a user's non-sponsored expires_at when they are removed" do
       o = Organization.create(:settings => {'total_licenses' => 1})
       u = User.create(:expires_at => Time.now + 100, :settings => {'subscription' => {'org_sponsored' => false, 'seconds_left' => 3.weeks.to_i}})
-      u.settings['managed_by'] = {}
-      u.settings['managed_by'][o.global_id] = {'sponsored' => false, 'pending' => false}
-      u.save
+      o.add_user(u.user_name, false, false)
       o.remove_user(u.user_name)
       u.reload
       expect(u.settings['subscription_left']) == nil
@@ -489,9 +471,7 @@ describe Organization, :type => :model do
       o = Organization.create(:settings => {'total_licenses' => 1})
       u = User.create(:expires_at => Time.now + 100, :settings => {'subscription' => {'org_sponsored' => true, 'seconds_left' => 5}})
       expect(u.expires_at).to be < 1.day.from_now
-      u.settings['managed_by'] = {}
-      u.settings['managed_by'][o.global_id] = {'sponsored' => true, 'pending' => false}
-      u.save
+      o.add_user(u.user_name, false, true)
       o.remove_user(u.user_name)
       u.reload
       expect(u.settings['subscription_left']) == nil

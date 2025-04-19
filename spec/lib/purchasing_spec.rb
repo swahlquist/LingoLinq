@@ -3089,7 +3089,7 @@ describe Purchasing do
     expect(u.subscription_hash['expires']).to_not eq(nil)
     
     expect(Stripe::Charge).to receive(:create).with({
-      :amount => 20000,
+      :amount => 14500,
       :currency => 'usd',
       :source => 'tokenasdfasdfjkl',
       :description => 'CoughDrop cloud extras re-purchase',

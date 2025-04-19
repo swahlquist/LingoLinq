@@ -22,7 +22,7 @@ describe JsonApi::User do
     
     it "should include a correct gravatar url if profile is visible" do
       u = User.create(settings: {'email' => 'bob@example.com', 'public' => true})
-      expect(JsonApi::User.build_json(u)['avatar_url']).to match(/https:\/\/www\.gravatar\.com\/avatar\/4b9bb80620f03eb3719e0a061c14283d/)
+      expect(JsonApi::User.build_json(u)['avatar_url']).to match(/https:\/\/coughdrop\.s3\.amazonaws\.com\/avatars\/avatar-\d\.png/)
     end
     
     it "should include a silhouette url if profile is not visible" do
@@ -535,7 +535,7 @@ describe JsonApi::User do
       it "should include supervisors only if there are any" do
         u = User.create
         u2 = User.create
-        u.settings['supervisors'] = [{'user_id' => u2.global_id}]
+        User.link_supervisor_to_user(u2, u, nil, false)
         hash = JsonApi::User.build_json(u)
         expect(hash['permissions']).to eq(nil)
         expect(hash['supervisors']).to eq(nil)
@@ -549,10 +549,7 @@ describe JsonApi::User do
         expect(hash['supervisors'][0]['user_name']).to eq(u2.user_name)
         expect(hash['supervisors'][0]['edit_permission']).to eq(false)
 
-        u.settings['supervisors'] = [{'user_id' => u2.global_id, 'edit_permission' => true}]
-        u.save
-        u2.settings['supervisees'] = [{'user_id' => u.global_id, 'edit_permission' => true}]
-        u2.save
+        User.link_supervisor_to_user(u2, u, nil, true)
 
         expect(u2.edit_permission_for?(u)).to eq(true)
         hash = JsonApi::User.build_json(u, permissions: u)
@@ -564,8 +561,7 @@ describe JsonApi::User do
         expect(hash['supervisors'][0]['user_name']).to eq(u2.user_name)
         expect(hash['supervisors'][0]['edit_permission']).to eq(true)
         
-        u.settings['supervisors'] = nil
-        u.save
+        User.unlink_supervisor_from_user(u2, u)
         hash = JsonApi::User.build_json(u, permissions: u)
         expect(hash['permissions']).not_to eq(nil)
         expect(hash['supervisors']).to eq(nil)
@@ -574,7 +570,7 @@ describe JsonApi::User do
       it "should include supervisees only if there are any" do
         u = User.create
         u2 = User.create
-        u.settings['supervisees'] = [{'user_id' => u2.global_id}]
+        User.link_supervisor_to_user(u, u2, nil, false)
         hash = JsonApi::User.build_json(u)
         expect(hash['permissions']).to eq(nil)
         expect(hash['supervisees']).to eq(nil)
@@ -587,7 +583,7 @@ describe JsonApi::User do
         expect(hash['supervisees'][0]['name']).to eq(u2.settings['name'])
         expect(hash['supervisees'][0]['user_name']).to eq(u2.user_name)
         
-        u.settings['supervisees'] = nil
+        User.unlink_supervisor_from_user(u, u2)
         u.save
         hash = JsonApi::User.build_json(u.reload, permissions: u)
         expect(hash['permissions']).not_to eq(nil)

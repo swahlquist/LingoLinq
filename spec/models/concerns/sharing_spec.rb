@@ -212,19 +212,6 @@ describe Sharing, :type => :model do
           'pending' => false,
           'user_name' => u2.user_name
         }
-      },
-      {
-        'user_id' => u2.global_id,
-        'record_code' => Webhook.get_record_code(b),
-        'type' => 'board_share',
-        'old_school' => true,
-        'state' => {
-          'user_name' => u2.user_name,
-          'include_downstream' => false,
-          'pending' => false,
-          'allow_editing' => false,
-          'board_key' => nil
-        }
       }
       ])
     end

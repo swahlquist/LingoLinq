@@ -4312,22 +4312,23 @@ describe LogSession, :type => :model do
   describe "anonymous_logs" do
     it "should create a zip file" do
       expect(OBF::Utils).to receive(:build_zip)
-      expect(Uploader).to receive(:remote_upload).and_return("http://www.example.com/file.zip")
-      expect(LogSession.anonymous_logs).to eq({url: "http://www.example.com/file.zip"})
-      expect(Permissable.permissions_redis.get('global/anonymous/logs/url')).to eq("http://www.example.com/file.zip".to_json)
+      expect(Uploader).to receive(:remote_upload).and_return({url: "http://www.example.com/file.zip"})
+      expect(LogSession.anonymous_logs).to eq({urls: ["http://www.example.com/file.zip"]})
+      expect(Permissable.permissions_redis.get('global/anonymous/logs/url')).to eq(["http://www.example.com/file.zip"].to_json)
     end
 
     it "should only include users who have un-opted for publishing" do
+      ts = (Date.today << 1).to_time.to_i
       u1 = User.create
       u1.settings['preferences']['allow_log_reports'] = true
       u1.settings['preferences']['allow_log_publishing'] = true
       u1.save
       d1 = Device.create(user: u1)
       s1 = LogSession.process_new({'events' => [
-        {'type' => 'button', 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'button', 'modeling' => true, 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'button', 'modeling' => true, 'button' => {'spoken' => true, 'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'utterance', 'utterance' => {'text' => 'ok go ok', 'buttons' => []}, 'geo' => ['13', '12'], 'timestamp' => 1431029747}
+        {'type' => 'button', 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'button', 'modeling' => true, 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'button', 'modeling' => true, 'button' => {'spoken' => true, 'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'utterance', 'utterance' => {'text' => 'ok go ok', 'buttons' => []}, 'geo' => ['13', '12'], 'timestamp' => ts}
       ]}, {:user => u1, :author => u1, :device => d1, :ip_address => '1.2.3.4'})
       WeeklyStatsSummary.update_for(s1.global_id)
 
@@ -4337,30 +4338,31 @@ describe LogSession, :type => :model do
       u2.save
       d2 = Device.create(user: u2)
       s2 = LogSession.process_new({'events' => [
-        {'type' => 'button', 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'button', 'modeling' => true, 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'button', 'modeling' => true, 'button' => {'spoken' => true, 'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'utterance', 'utterance' => {'text' => 'ok go ok', 'buttons' => []}, 'geo' => ['13', '12'], 'timestamp' => 1431029747}
+        {'type' => 'button', 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'button', 'modeling' => true, 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'button', 'modeling' => true, 'button' => {'spoken' => true, 'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'utterance', 'utterance' => {'text' => 'ok go ok', 'buttons' => []}, 'geo' => ['13', '12'], 'timestamp' => ts}
       ]}, {:user => u2, :author => u2, :device => d2, :ip_address => '1.2.3.4'})
       WeeklyStatsSummary.update_for(s2.global_id)
+      WeeklyStatsSummary.track_trends(WeeklyStatsSummary.date_to_weekyear(Date.today << 1))
 
       u3 = User.create
       d3 = Device.create(user: u3)
       s3 = LogSession.process_new({'events' => [
-        {'type' => 'button', 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'button', 'modeling' => true, 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'button', 'modeling' => true, 'button' => {'spoken' => true, 'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'utterance', 'utterance' => {'text' => 'ok go ok', 'buttons' => []}, 'geo' => ['13', '12'], 'timestamp' => 1431029747}
+        {'type' => 'button', 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'button', 'modeling' => true, 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'button', 'modeling' => true, 'button' => {'spoken' => true, 'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'utterance', 'utterance' => {'text' => 'ok go ok', 'buttons' => []}, 'geo' => ['13', '12'], 'timestamp' => ts}
       ]}, {:user => u3, :author => u3, :device => d3, :ip_address => '1.2.3.4'})
 
-      expect(Uploader).to receive(:remote_upload).and_return("http://www.example.com/file.zip")
+      expect(Uploader).to receive(:remote_upload).and_return({url: "http://www.example.com/file.zip"})
       expect(Exporter).to receive(:export_logs) do |user_id, anon, zipper|
         expect(anon).to eq(true)
         expect(zipper).to_not eq(nil)
         expect(user_id).to eq(u1.global_id)
       end
-      expect(LogSession.anonymous_logs).to eq({url: "http://www.example.com/file.zip"})
-      expect(Permissable.permissions_redis.get('global/anonymous/logs/url')).to eq("http://www.example.com/file.zip".to_json)
+      expect(LogSession.anonymous_logs).to eq({urls: ["http://www.example.com/file.zip"]})
+      expect(Permissable.permissions_redis.get('global/anonymous/logs/url')).to eq(["http://www.example.com/file.zip"].to_json)
     end
 
 
@@ -4370,22 +4372,25 @@ describe LogSession, :type => :model do
       u1.settings['preferences']['allow_log_publishing'] = true
       u1.save
       d1 = Device.create(user: u1)
+      ts = (Date.today << 1).to_time.to_i
+      puts Time.at(ts)
       s1 = LogSession.process_new({'events' => [
-        {'type' => 'button', 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'button', 'modeling' => true, 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'button', 'modeling' => true, 'button' => {'spoken' => true, 'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => 1431029747 - 1},
-        {'type' => 'utterance', 'utterance' => {'text' => 'ok go ok', 'buttons' => []}, 'geo' => ['13', '12'], 'timestamp' => 1431029747}
+        {'type' => 'button', 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'button', 'modeling' => true, 'button' => {'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'button', 'modeling' => true, 'button' => {'spoken' => true, 'label' => 'ok go ok', 'button_id' => 1, 'board' => {'id' => '1_1'}}, 'geo' => ['13', '12'], 'timestamp' => ts - 1},
+        {'type' => 'utterance', 'utterance' => {'text' => 'ok go ok', 'buttons' => []}, 'geo' => ['13', '12'], 'timestamp' => ts}
       ]}, {:user => u1, :author => u1, :device => d1, :ip_address => '1.2.3.4'})
       WeeklyStatsSummary.update_for(s1.global_id)
+      WeeklyStatsSummary.track_trends(WeeklyStatsSummary.date_to_weekyear(Date.today << 1))
 
-      expect(Uploader).to receive(:remote_upload).and_return("http://www.example.com/file.zip")
+      expect(Uploader).to receive(:remote_upload).and_return({url: "http://www.example.com/file.zip"})
       expect(Exporter).to receive(:export_logs) do |user_id, anon, zipper|
         expect(anon).to eq(true)
         expect(zipper).to_not eq(nil)
         expect(user_id).to eq(u1.global_id)
       end
-      expect(LogSession.anonymous_logs).to eq({url: "http://www.example.com/file.zip"})
-      expect(Permissable.permissions_redis.get('global/anonymous/logs/url')).to eq("http://www.example.com/file.zip".to_json)
+      expect(LogSession.anonymous_logs).to eq({urls: ["http://www.example.com/file.zip"]})
+      expect(Permissable.permissions_redis.get('global/anonymous/logs/url')).to eq(["http://www.example.com/file.zip"].to_json)
     end
   end
 end

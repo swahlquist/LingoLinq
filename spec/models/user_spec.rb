@@ -455,11 +455,13 @@ describe User, :type => :model do
     it "should not update the user date when updating tracked board if there are no changes" do
       u = User.create
       b = Board.create(:user => u)
+      u.settings['home_board_changed'] = false
+      u.save
       User.where(:id => u.id).update_all(:updated_at => 2.months.ago)
       u.reload
       u.track_boards(true)
       u.reload
-      expect(u.updated_at).to be < 1.week.ago
+      expect(u.updated_at).to be < (1.week.ago)
     end
   end
         
@@ -1171,11 +1173,13 @@ describe User, :type => :model do
         expect(args[:body]).to eq({
           content: {
             uid: ui.user_token(u),
+            anon_id: u.reload.anonymized_identifier,
             details: {
               primary_use: 'a',
               age: 'b',
               experience_level: 'c'
-            }
+            },
+            host: JsonApi::Json.current_host
           }.to_json,
           notification: 'anonymized_user_details',
           record: s.record_code,
@@ -1234,10 +1238,12 @@ describe User, :type => :model do
         expect(args[:body]).to eq({
           content: {
             uid: ui.user_token(u),
+            anon_id: u.reload.anonymized_identifier,
             details: {
               primary_use: 'a',
               experience_level: 'c'
-            }
+            },
+            host: JsonApi::Json.current_host
           }.to_json,
           notification: 'anonymized_user_details',
           record: s.record_code,
@@ -1285,11 +1291,13 @@ describe User, :type => :model do
         expect(args[:body]).to eq({
           content: {
             uid: ui.user_token(u),
+            anon_id: u.reload.anonymized_identifier,
             details: {
               primary_use: 'a',
               age: 'b',
               experience_level: 'c'
-            }
+            },
+            host: JsonApi::Json.current_host
           }.to_json,
           notification: 'anonymized_user_details',
           record: s.record_code,
@@ -2376,9 +2384,9 @@ describe User, :type => :model do
         u = User.new
         u.id = 199
         u.settings = {'email' => 'bob@example.com'}
-        expect(u.generated_avatar_url('default')).to eq('https://www.gravatar.com/avatar/4b9bb80620f03eb3719e0a061c14283d?s=100&d=https%3A%2F%2Fcoughdrop.s3.amazonaws.com%2Favatars%2Favatar-9.png');
+        expect(u.generated_avatar_url('default')).to eq('https://coughdrop.s3.amazonaws.com/avatars/avatar-9.png');
         u.settings['avatar_url'] = 'http://www.example.com/pic.png'
-        expect(u.generated_avatar_url('default')).to eq('https://www.gravatar.com/avatar/4b9bb80620f03eb3719e0a061c14283d?s=100&d=https%3A%2F%2Fcoughdrop.s3.amazonaws.com%2Favatars%2Favatar-9.png');
+        expect(u.generated_avatar_url('default')).to eq('https://coughdrop.s3.amazonaws.com/avatars/avatar-9.png');
       end
       
       it "should use the passed-in url if specified" do
@@ -2426,7 +2434,7 @@ describe User, :type => :model do
         expect(u.prior_avatar_urls).to eq(nil)
         u.process({'avatar_url' => 'fallback'})
         expect(u.generated_avatar_url).to eq(u.generated_avatar_url('fallback'));
-        expect(u.prior_avatar_urls).to eq([u.generated_avatar_url('default')])
+        expect(u.prior_avatar_urls).to eq(nil)
         u.process({'avatar_url' => 'http://www.example.com/pic2.png'})
         expect(u.prior_avatar_urls).to eq([u.generated_avatar_url('default')])
       end

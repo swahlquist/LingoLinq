@@ -9,10 +9,7 @@ describe Supervising, :type => :model do
         'user_id' => u2.global_id,
         'view_existence' => true
       })
-      u.settings['supervisors'] = [{'user_id' => u2.global_id}]
-      u.updated_at = Time.now
-      u2.settings['supervisees'] = [{'user_id' => u.global_id}]
-      u2.updated_at = Time.now
+      User.link_supervisor_to_user(u2, u, nil, false)
       expect(u.permissions_for(u2)).to eq({
         'user_id' => u2.global_id,
         'view_existence' => true,
@@ -23,10 +20,7 @@ describe Supervising, :type => :model do
         'model' => true,
         'supervise' => true
       })
-      u.settings['supervisors'] = [{'user_id' => u2.global_id, 'edit_permission' => true}]
-      u.updated_at = Time.now
-      u2.settings['supervisees'] = [{'user_id' => u.global_id, 'edit_permission' => true}]
-      u2.updated_at = Time.now
+      User.link_supervisor_to_user(u2, u, nil, true)
 
       expect(u2.edit_permission_for?(u)).to eq(true)
       expect(u.permissions_for(u2)).to eq({
@@ -53,11 +47,7 @@ describe Supervising, :type => :model do
         'user_id' => u2.global_id,
         'view_existence' => true
       })
-      u.settings['supervisors'] = [{'user_id' => u2.global_id}]
-      u.updated_at = Time.now
-      u2.settings['preferences']['role'] = 'supporter'
-      u2.settings['supervisees'] = [{'user_id' => u.global_id}]
-      u2.updated_at = Time.now
+      User.link_supervisor_to_user(u2, u, nil, false)
       expect(u2.modeling_only?).to eq(true)
       expect(u.permissions_for(u2)).to eq({
         'user_id' => u2.global_id,
@@ -66,10 +56,7 @@ describe Supervising, :type => :model do
         'view_word_map' => true,
         'model' => true,
       })
-      u.settings['supervisors'] = [{'user_id' => u2.global_id, 'edit_permission' => true}]
-      u.updated_at = Time.now
-      u2.settings['supervisees'] = [{'user_id' => u.global_id, 'edit_permission' => true}]
-      u2.updated_at = Time.now
+      User.link_supervisor_to_user(u2, u, nil, true)
 
       expect(u2.edit_permission_for?(u)).to eq(false)
       expect(u.permissions_for(u2)).to eq({
@@ -100,14 +87,13 @@ describe Supervising, :type => :model do
     
     it "should unlink a user and supervisor" do
       u = User.create
-      u2 = User.create(:settings => {'supervisees' => [{'user_id' => u.global_id}]})
-      u.settings['supervisors'] = [{'user_id' => u2.global_id}]
-      u.save
+      u2 = User.create()
+      User.link_supervisor_to_user(u2, u, nil, false)
       expect(u2.supervised_user_ids).to eq([u.global_id])
       expect(u.supervisor_user_ids).to eq([u2.global_id])
       User.unlink_supervisor_from_user(u2, u)
-      expect(u2.settings['supervisees']).to eq([])
-      expect(u.settings['supervisors']).to eq([])
+      expect(u2.supervised_user_ids).to eq([])
+      expect(u.supervisor_user_ids).to eq([])
     end
     
     it "should auto-set a supervisor as a supporter role" do

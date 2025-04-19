@@ -111,9 +111,9 @@ describe UpstreamDownstream, :type => :model do
       b1.save
       Worker.process_queues
       expect(b1.reload.settings['immediately_downstream_board_ids'].sort).to eq([b2.global_id].sort)
-      expect(b3.reload.settings['downstream_board_ids'].sort).to eq([].sort)
-      expect(b2.reload.settings['downstream_board_ids'].sort).to eq([].sort)
-      expect(b1.reload.settings['downstream_board_ids'].sort).to eq([b2.global_id].sort)
+      expect(b3.reload.downstream_board_ids.sort).to eq([].sort)
+      expect(b2.reload.downstream_board_ids.sort).to eq([].sort)
+      expect(b1.reload.downstream_board_ids.sort).to eq([b2.global_id].sort)
     end
     
     it "should not run through tracking if the board has been tracked since the tracking was scheduled" do
@@ -160,9 +160,9 @@ describe UpstreamDownstream, :type => :model do
       b1.save
       RemoteAction.process_all
       Worker.process_queues
-      expect(b3.reload.settings['downstream_board_ids'].sort).to eq([].sort)
-      expect(b2.reload.settings['downstream_board_ids'].sort).to eq([].sort)
-      expect(b1.reload.settings['downstream_board_ids'].sort).to eq([b2.global_id].sort)
+      expect(b3.reload.downstream_board_ids.sort).to eq([].sort)
+      expect(b2.reload.downstream_board_ids.sort).to eq([].sort)
+      expect(b1.reload.downstream_board_ids.sort).to eq([b2.global_id].sort)
       b2.settings['buttons'] = [
         {'id' => 1, 'load_board' => {'id' => b3.global_id}}
       ]
@@ -174,9 +174,9 @@ describe UpstreamDownstream, :type => :model do
       RemoteAction.process_all
       Worker.process_queues
       Worker.process_queues
-      expect(b3.reload.settings['downstream_board_ids'].sort).to eq([].sort)
-      expect(b2.reload.settings['downstream_board_ids'].sort).to eq([b3.global_id].sort)
-      expect(b1.reload.settings['downstream_board_ids'].sort).to eq([b2.global_id, b3.global_id].sort)
+      expect(b3.reload.downstream_board_ids.sort).to eq([].sort)
+      expect(b2.reload.downstream_board_ids.sort).to eq([b3.global_id].sort)
+      expect(b1.reload.downstream_board_ids.sort).to eq([b2.global_id, b3.global_id].sort)
       b3.settings['buttons'] = [
         {'id' => 1, 'load_board' => {'id' => b1.global_id}}
       ]
@@ -188,9 +188,9 @@ describe UpstreamDownstream, :type => :model do
       Worker.process_queues
       Worker.process_queues
       Worker.process_queues
-      expect(b3.reload.settings['downstream_board_ids'].sort).to eq([b1.global_id, b2.global_id].sort)
-      expect(b2.reload.settings['downstream_board_ids'].sort).to eq([b3.global_id, b1.global_id].sort)
-      expect(b1.reload.settings['downstream_board_ids'].sort).to eq([b2.global_id, b3.global_id].sort)
+      expect(b3.reload.downstream_board_ids.sort).to eq([b1.global_id, b2.global_id].sort)
+      expect(b2.reload.downstream_board_ids.sort).to eq([b3.global_id, b1.global_id].sort)
+      expect(b1.reload.downstream_board_ids.sort).to eq([b2.global_id, b3.global_id].sort)
     end
     
     it "should not get stuck in a job scheduling loop when tracking streams" do
@@ -212,9 +212,9 @@ describe UpstreamDownstream, :type => :model do
       Worker.process_queues
       Worker.process_queues
       expect(Worker.queues_empty?).to eq(true)
-      expect(b3.reload.settings['downstream_board_ids'].sort).to eq([].sort)
-      expect(b2.reload.settings['downstream_board_ids'].sort).to eq([].sort)
-      expect(b1.reload.settings['downstream_board_ids'].sort).to eq([b2.global_id].sort)
+      expect(b3.reload.downstream_board_ids.sort).to eq([].sort)
+      expect(b2.reload.downstream_board_ids.sort).to eq([].sort)
+      expect(b1.reload.downstream_board_ids.sort).to eq([b2.global_id].sort)
       b2.settings['buttons'] = [
         {'id' => 1, 'load_board' => {'id' => b3.global_id}}
       ]
@@ -228,9 +228,9 @@ describe UpstreamDownstream, :type => :model do
       Worker.process_queues
       Worker.process_queues
       expect(Worker.queues_empty?).to eq(true)
-      expect(b3.reload.settings['downstream_board_ids'].sort).to eq([].sort)
-      expect(b2.reload.settings['downstream_board_ids'].sort).to eq([b3.global_id].sort)
-      expect(b1.reload.settings['downstream_board_ids'].sort).to eq([b2.global_id, b3.global_id].sort)
+      expect(b3.reload.downstream_board_ids.sort).to eq([].sort)
+      expect(b2.reload.downstream_board_ids.sort).to eq([b3.global_id].sort)
+      expect(b1.reload.downstream_board_ids.sort).to eq([b2.global_id, b3.global_id].sort)
       b3.settings['buttons'] = [
         {'id' => 1, 'load_board' => {'id' => b1.global_id}}
       ]
@@ -246,9 +246,9 @@ describe UpstreamDownstream, :type => :model do
       Worker.process_queues
       Worker.process_queues
       expect(Worker.queues_empty?).to eq(true)
-      expect(b3.reload.settings['downstream_board_ids'].sort).to eq([b1.global_id, b2.global_id].sort)
-      expect(b2.reload.settings['downstream_board_ids'].sort).to eq([b3.global_id, b1.global_id].sort)
-      expect(b1.reload.settings['downstream_board_ids'].sort).to eq([b2.global_id, b3.global_id].sort)
+      expect(b3.reload.downstream_board_ids.sort).to eq([b1.global_id, b2.global_id].sort)
+      expect(b2.reload.downstream_board_ids.sort).to eq([b3.global_id, b1.global_id].sort)
+      expect(b1.reload.downstream_board_ids.sort).to eq([b2.global_id, b3.global_id].sort)
     end
     
     it "should update button counts" do
@@ -267,13 +267,13 @@ describe UpstreamDownstream, :type => :model do
       b1.save
       RemoteAction.process_all
       Worker.process_queues
-      expect(b3.reload.settings['downstream_board_ids'].sort).to eq([].sort)
+      expect(b3.reload.downstream_board_ids.sort).to eq([].sort)
       expect(b3.settings['total_buttons']).to eq(0)
       expect(b3.settings['unlinked_buttons']).to eq(0)
-      expect(b2.reload.settings['downstream_board_ids'].sort).to eq([].sort)
+      expect(b2.reload.downstream_board_ids.sort).to eq([].sort)
       expect(b2.settings['total_buttons']).to eq(0)
       expect(b2.settings['unlinked_buttons']).to eq(0)
-      expect(b1.reload.settings['downstream_board_ids'].sort).to eq([b2.global_id].sort)
+      expect(b1.reload.downstream_board_ids.sort).to eq([b2.global_id].sort)
       expect(b1.settings['total_buttons']).to eq(2)
       expect(b1.settings['unlinked_buttons']).to eq(1)
       b2.settings['buttons'] = [
@@ -289,13 +289,13 @@ describe UpstreamDownstream, :type => :model do
       RemoteAction.process_all
       Worker.process_queues
       Worker.process_queues
-      expect(b3.reload.settings['downstream_board_ids'].sort).to eq([].sort)
+      expect(b3.reload.downstream_board_ids.sort).to eq([].sort)
       expect(b3.settings['total_buttons']).to eq(0)
       expect(b3.settings['unlinked_buttons']).to eq(0)
-      expect(b2.reload.settings['downstream_board_ids'].sort).to eq([b3.global_id].sort)
+      expect(b2.reload.downstream_board_ids.sort).to eq([b3.global_id].sort)
       expect(b2.settings['total_buttons']).to eq(3)
       expect(b2.settings['unlinked_buttons']).to eq(2)
-      expect(b1.reload.settings['downstream_board_ids'].sort).to eq([b2.global_id, b3.global_id].sort)
+      expect(b1.reload.downstream_board_ids.sort).to eq([b2.global_id, b3.global_id].sort)
       expect(b1.settings['total_buttons']).to eq(5)
       expect(b1.settings['unlinked_buttons']).to eq(3)
       b3.settings['buttons'] = [
@@ -311,13 +311,13 @@ describe UpstreamDownstream, :type => :model do
       Worker.process_queues
       Worker.process_queues
       Worker.process_queues
-      expect(b3.reload.settings['downstream_board_ids'].sort).to eq([b1.global_id, b2.global_id].sort)
+      expect(b3.reload.downstream_board_ids.sort).to eq([b1.global_id, b2.global_id].sort)
       expect(b3.settings['total_buttons']).to eq(7)
       expect(b3.settings['unlinked_buttons']).to eq(4)
-      expect(b2.reload.settings['downstream_board_ids'].sort).to eq([b3.global_id, b1.global_id].sort)
+      expect(b2.reload.downstream_board_ids.sort).to eq([b3.global_id, b1.global_id].sort)
       expect(b2.settings['total_buttons']).to eq(7)
       expect(b2.settings['unlinked_buttons']).to eq(4)
-      expect(b1.reload.settings['downstream_board_ids'].sort).to eq([b2.global_id, b3.global_id].sort)
+      expect(b1.reload.downstream_board_ids.sort).to eq([b2.global_id, b3.global_id].sort)
       expect(b1.settings['total_buttons']).to eq(7)
       expect(b1.settings['unlinked_buttons']).to eq(4)
 
@@ -337,13 +337,13 @@ describe UpstreamDownstream, :type => :model do
       Worker.process_queues
       Worker.process_queues
       Worker.process_queues
-      expect(b3.reload.settings['downstream_board_ids'].sort).to eq([b1.global_id, b2.global_id].sort)
+      expect(b3.reload.downstream_board_ids.sort).to eq([b1.global_id, b2.global_id].sort)
       expect(b3.settings['total_buttons']).to eq(8)
       expect(b3.settings['unlinked_buttons']).to eq(5)
-      expect(b2.reload.settings['downstream_board_ids'].sort).to eq([b3.global_id, b1.global_id].sort)
+      expect(b2.reload.downstream_board_ids.sort).to eq([b3.global_id, b1.global_id].sort)
       expect(b2.settings['total_buttons']).to eq(8)
       expect(b2.settings['unlinked_buttons']).to eq(5)
-      expect(b1.reload.settings['downstream_board_ids'].sort).to eq([b2.global_id, b3.global_id].sort)
+      expect(b1.reload.downstream_board_ids.sort).to eq([b2.global_id, b3.global_id].sort)
       expect(b1.settings['total_buttons']).to eq(8)
       expect(b1.settings['unlinked_buttons']).to eq(5)
     end
@@ -365,6 +365,7 @@ describe UpstreamDownstream, :type => :model do
       b1.save
 
       allow(Board).to receive(:find_all_by_global_id).with([b2.global_id]).and_return([b2]).at_least(1).times
+      allow(Board).to receive(:find_all_by_global_id).with(['self']).and_return([]).at_least(1).times
       allow(Board).to receive(:find_all_by_global_id).with([]).and_return([]).at_least(1).times
       expect(b2).to receive(:add_upstream_board_id!).with(b1.global_id).at_least(1).times
       Worker.process_queues      

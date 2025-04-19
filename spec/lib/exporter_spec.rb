@@ -7,6 +7,8 @@ describe Exporter do
   describe 'export_logs' do
     it 'should export logs and upload remotely' do
       u = User.create
+      d = Device.create(user: u)
+      session = LogSession.create(user: u, author: u, device: d)
       tmp = OpenStruct.new
       expect(Tempfile).to receive(:new).with(['log', '.obl']).and_return(tmp)
       expect(tmp).to receive(:write) do |str|
@@ -26,6 +28,8 @@ describe Exporter do
 
     it 'should export anonymized logs' do
       u = User.create
+      d = Device.create(user: u)
+      session = LogSession.create(user: u, author: u, device: d)
       tmp = OpenStruct.new
       expect(Tempfile).to receive(:new).with(['log', '.obla']).and_return(tmp)
       expect(tmp).to receive(:write) do |str|
@@ -45,6 +49,8 @@ describe Exporter do
 
     it 'should generate a zip if defined' do
       u = User.create
+      d = Device.create(user: u)
+      session = LogSession.create(user: u, author: u, device: d)
       expect(Tempfile).to_not receive(:new)
       zipper = OpenStruct.new
       expect(zipper).to receive(:add) do |fn, str|

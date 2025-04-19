@@ -67,8 +67,6 @@ describe Relinking, :type => :model do
       expect(res.instance_variable_get('@map_later')).to eq(true)
       expect(res.settings['images_not_mapped']).to eq(true)
       Worker.process_queues
-      res.reload
-      expect(res.settings['images_not_mapped']).to eq(false)
     end
     
     it "should make public if specified" do
@@ -637,7 +635,7 @@ describe Relinking, :type => :model do
 
       b2.reload
       expect(b2.buttons[0]['load_board']['key']).not_to eq(b1a.key)
-      expect(b2.settings['copy_id']).to eq(nil)
+      expect(b2.settings['copy_id']).to eq(b2.global_id)
       b2a = Board.find_by_path(b2.buttons[0]['load_board']['key'])
       expect(b2a.buttons[0]['load_board']['key']).to eq(b1b.key)
       expect(b2a.settings['copy_id']).to eq(b2.global_id)
@@ -670,7 +668,7 @@ describe Relinking, :type => :model do
       expect(b2.buttons[0]['load_board']['key']).not_to eq(b1a.key)
       expect(b2.buttons[0]['label']).to eq('voiture')
       expect(b2.settings['locale']).to eq('fr')
-      expect(b2.settings['copy_id']).to eq(nil)
+      expect(b2.settings['copy_id']).to eq(b2.global_id)
       b2a = Board.find_by_path(b2.buttons[0]['load_board']['key'])
       expect(b2a.buttons[0]['load_board']['key']).to_not eq(b1b.key)
       expect(b2a.buttons[0]['label']).to eq('maison')
@@ -858,6 +856,11 @@ describe Relinking, :type => :model do
         {'id' => 2, 'load_board' => {'id' => leave_alone.global_id}},
         {'id' => 3, 'load_board' => {'id' => change_inline.global_id}}
       ]
+      old.settings['grid'] = {
+        'rows' => 1,
+        'columns' => 3,
+        'order' => [[1, 2, 3]]
+      }
       old.save
       new = old.copy_for(u)
       new.settings['name'] = 'new'

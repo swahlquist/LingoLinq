@@ -31,6 +31,7 @@ module Exporter
     
     # If chunking is required, the result will need to be a zip file, not a single obl/obla
     if chunks.length > 1 && !zipper && !cutoff
+      raise 'arg'
       file = Tempfile.new(['log-data', '.zip'])
       file.close
       OBF::Utils.build_zip(file.path) do |zipper|
@@ -401,7 +402,7 @@ More information about the file formats being used is available at https://www.o
             'percent_x', 'percent_y'].each do |extra|
         e[extra] = event[extra] if event[extra] != nil
         e[extra] = event['button'][extra] if e[extra] == nil && event['button'] && event['button'][extra] != nil
-        e[extra].delete('timestamp') # orientation and maybe others extra-store timestamp, which should be removed
+        e[extra].delete('timestamp') if e[extra] && e[extra].is_a?(Hash) # orientation and maybe others extra-store timestamp, which should be removed
       end
       ['ip_address', 'ssid'].each do |extra|
         if anonymized && e[extra]

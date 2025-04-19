@@ -595,6 +595,7 @@ class User < ActiveRecord::Base
       self.settings['tracked_boards_at'] = Time.now.to_i
       self.save
     end
+
     
     previous_connections = UserBoardConnection.where(:user_id => self.id)
     orphan_board_ids = previous_connections.map(&:board_id)

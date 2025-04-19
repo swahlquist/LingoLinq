@@ -4824,7 +4824,7 @@ describe Board, :type => :model do
         bi = ButtonImage.create(settings: {'license' => {'author_name' => 'tobii', 'uneditable' => true, 'author_url' => ''}})
         list << bi
       end
-      expect(b).to receive(:button_known_button_imagesimages).and_return(list)
+      expect(b).to receive(:known_button_images).and_return(list)
       expect(b.current_library(true)).to eq('pcs')
       expect(b.settings['common_library']).to eq('pcs')
     end

@@ -39,7 +39,7 @@ describe MetaRecord, :type => :model do
     expect(r).not_to eq(nil)
     expect(r.title).to eq("Fred Jones")
     expect(r.summary).to eq("I am a good ma")
-    expect(r.image).to match(/gravatar/)
+    expect(r.image).to match(/avatars\/avatar-/)
     expect(r.link).to eq("#{JsonApi::Json.current_host}/#{u.user_name}")
     expect(r.created).to eq(u.created_at.iso8601)
     expect(r.updated).to eq(u.updated_at.iso8601)

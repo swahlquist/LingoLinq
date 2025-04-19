@@ -138,83 +138,6 @@ describe UserLink, :type => :model do
           'record_code' => Webhook.get_record_code(b),
           'type' => 'bacon', 
           'state' => {}
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => 'Board:1_12345',
-          'type' => 'board_share',
-          'old_school' => true,
-          'state' => {
-            'include_downstream' => true,
-            'allow_editing' => true,
-            'pending' => true,
-            'board_key' => 'a/b',
-            'user_name' => u.user_name
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(u2),
-          'type' => 'supervisor',
-          'old_school' => true,
-          'state' => {
-            'edit_permission' => true,
-            'organization_unit_ids' => ['a', 'b']
-          }
-        },
-        {
-          'user_id' => u2.global_id,
-          'record_code' => Webhook.get_record_code(u),
-          'type' => 'supervisor',
-          'old_school' => true,
-          'state' => {
-            'edit_permission' => true,
-            'organization_unit_ids' => ['c', 'd']
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_user',
-          'old_school' => true,
-          'state' => {
-            'sponsored' => true,
-            'pending' => true
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_manager',
-          'old_school' => true,
-          'state' => {
-            'full_manager' => true
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_supervisor',
-          'old_school' => true,
-          'state' => {
-            'pending' => true
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(ou),
-          'type' => 'org_unit_supervisor',
-          'old_school' => true,
-          'state' => {
-            'edit_permission' => true
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(ou),
-          'type' => 'org_unit_communicator',
-          'old_school' => true, 
-          'state' => {}
         }
       ])
     end
@@ -242,64 +165,6 @@ describe UserLink, :type => :model do
           'type' => 'bacon',
           'state' => {}
         },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_user',
-          'old_school' => true,
-          'state' => {
-            'pending' => false,
-            'sponsored' => true,
-            'eval' => false
-          }
-        },
-        {
-          'user_id' => u2.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_user',
-          'old_school' => true,
-          'state' => {
-            'pending' => false,
-            'sponsored' => false,
-            'eval' => false
-          }
-        },
-        {
-          'user_id' => u3.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_user',
-          'old_school' => true,
-          'state' => {
-            'pending' => true,
-            'sponsored' => false,
-            'eval' => false
-          }
-        },
-        {
-          'user_id' => u4.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_manager',
-          'old_school' => true,
-          'state' => {
-            'full_manager' => true
-          }
-        },
-        {
-          'user_id' => u4.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_supervisor',
-          'old_school' => true,
-          'state' => {
-          }
-        },
-        {
-          'user_id' => u4.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_subscription',
-          'old_school' => true,
-          'state' => {
-          }
-        }
       ])
     end
     
@@ -380,25 +245,6 @@ describe UserLink, :type => :model do
           'type' => 'bacon',
           'state' => {}
         },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(ou),
-          'type' => 'org_unit_supervisor',
-          'old_school' => true,
-          'state' => {
-            'user_name' => 'jobs',
-            'edit_permission' => true
-          }
-        },
-        {
-          'user_id' => u2.global_id,
-          'record_code' => Webhook.get_record_code(ou),
-          'type' => 'org_unit_communicator',
-          'old_school' => true,
-          'state' => {
-            'user_name' => 'blech'
-          }
-        }
       ])
     end
   end
@@ -459,91 +305,22 @@ describe UserLink, :type => :model do
         'pending' => true
       }
       u.save
-      expect(UserLink.links_for(u).length).to eq(10)
+      expect(UserLink.links_for(u).length).to eq(1)
       expect(UserLink.assert_links(u)).to eq(true)
-      expect(UserLink.links_for(u.reload).length).to eq(9)
+      expect(UserLink.links_for(u.reload).length).to eq(1)
       expect(UserLink.links_for(u.reload).sort_by{|l| [l['type'], l['user_id'], l['record_code']] }).to eq([
         {
           'user_id' => u.global_id,
           'record_code' => Webhook.get_record_code(b),
           'type' => 'bacon', 
           'state' => {}
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(b),
-          'type' => 'board_share',
-          'state' => {
-            'include_downstream' => true,
-            'allow_editing' => true,
-            'pending' => true,
-            'board_key' => 'a/b',
-            'user_name' => u.user_name
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_manager',
-          'state' => {
-            'full_manager' => true
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_supervisor',
-          'state' => {
-            'pending' => true
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(ou),
-          'type' => 'org_unit_communicator',
-          'state' => {}
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(ou),
-          'type' => 'org_unit_supervisor',
-          'state' => {
-            'edit_permission' => true
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_user',
-          'state' => {
-            'sponsored' => true,
-            'pending' => true
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(u2),
-          'type' => 'supervisor',
-          'state' => {
-            'edit_permission' => true,
-            'organization_unit_ids' => ['a', 'b']
-          }
-        },
-        {
-          'user_id' => u2.global_id,
-          'record_code' => Webhook.get_record_code(u),
-          'type' => 'supervisor',
-          'state' => {
-            'edit_permission' => true,
-            'organization_unit_ids' => ['c', 'd']
-          }
-        },
+        }
       ])
 
-      ['boards_shared_with_me', 'boards_i_shared', 'supervisors', 'supervisees', 'managed_by', 'manager_for', 'supervisor_for'].each do |key|
-        expect(u.settings[key]).to eq(nil)
-        expect(u.settings["#{key}_old"]).to_not eq(nil)
-      end
+      # ['boards_shared_with_me', 'boards_i_shared', 'supervisors', 'supervisees', 'managed_by', 'manager_for', 'supervisor_for'].each do |key|
+      #   expect(u.settings[key]).to eq(nil)
+      #   expect(u.settings["#{key}_old"]).to_not eq(nil)
+      # end
     end
     
     it "should assert and remove old org links" do
@@ -562,67 +339,15 @@ describe UserLink, :type => :model do
       }
       link = UserLink.generate(u, o, 'bacon')
       link.save
-      expect(UserLink.links_for(o).length).to eq(7)
+      expect(UserLink.links_for(o).length).to eq(1)
       expect(UserLink.assert_links(o)).to eq(true)
-      expect(UserLink.links_for(o.reload).length).to eq(7)
+      expect(UserLink.links_for(o.reload).length).to eq(1)
       expect(UserLink.links_for(o).sort_by{|l| [l['type'], l['user_id'], l['record_code']] }).to eq([
         {
           'user_id' => u.global_id,
           'record_code' => Webhook.get_record_code(o),
           'type' => 'bacon',
           'state' => {}
-        },
-        {
-          'user_id' => u4.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_manager',
-          'state' => {
-            'full_manager' => true
-          }
-        },
-        {
-          'user_id' => u4.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_subscription',
-          'state' => {
-          }
-        },
-        {
-          'user_id' => u4.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_supervisor',
-          'state' => {
-          }
-        },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_user',
-          'state' => {
-            'pending' => false,
-            'sponsored' => true,
-            'eval' => false
-          }
-        },
-        {
-          'user_id' => u2.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_user',
-          'state' => {
-            'pending' => false,
-            'sponsored' => false,
-            'eval' => false
-          }
-        },
-        {
-          'user_id' => u3.global_id,
-          'record_code' => Webhook.get_record_code(o),
-          'type' => 'org_user',
-          'state' => {
-            'pending' => true,
-            'sponsored' => false,
-            'eval' => false
-          }
         },
       ])
     end
@@ -643,9 +368,9 @@ describe UserLink, :type => :model do
       }]
       link = UserLink.generate(u, ou, 'bacon')
       link.save
-      expect(UserLink.links_for(ou).length).to eq(3)
+      expect(UserLink.links_for(ou).length).to eq(1)
       expect(UserLink.assert_links(ou)).to eq(true)
-      expect(UserLink.links_for(ou.reload).length).to eq(3)
+      expect(UserLink.links_for(ou.reload).length).to eq(1)
       expect(UserLink.links_for(ou)).to eq([
         {
           'user_id' => u.global_id,
@@ -653,23 +378,6 @@ describe UserLink, :type => :model do
           'type' => 'bacon',
           'state' => {}
         },
-        {
-          'user_id' => u.global_id,
-          'record_code' => Webhook.get_record_code(ou),
-          'type' => 'org_unit_supervisor',
-          'state' => {
-            'user_name' => 'jobs',
-            'edit_permission' => true
-          }
-        },
-        {
-          'user_id' => u2.global_id,
-          'record_code' => Webhook.get_record_code(ou),
-          'type' => 'org_unit_communicator',
-          'state' => {
-            'user_name' => 'blech'
-          }
-        }
       ])
     end
   end

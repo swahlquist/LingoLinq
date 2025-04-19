@@ -1191,7 +1191,7 @@ describe Api::BoardsController, :type => :controller do
       Worker.process_queues
       b2 = Board.find_by_path(json['board']['id'])
       expect(b2).to_not eq(b)
-      expect(b2.settings['downstream_board_ids']).to eq([])
+      expect(b2.downstream_board_ids).to eq([])
     end
     
     it "should not allow creating a board for a random someone else" do
