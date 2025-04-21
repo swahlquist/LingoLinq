@@ -30,7 +30,7 @@ export default Route.extend({
     }
   },
   setupController: function(controller, model) {
-    controller.set('user', this.get('store').createRecord('user', {preferences: {}, referrer: CoughDrop.referrer, ad_referrer: CoughDrop.ad_referrer}));
+    controller.set('user', this.get('store').createRecord('user', {preferences: {}, referrer: SweetSuite.referrer, ad_referrer: SweetSuite.ad_referrer}));
     controller.set('user.watch_user_name_and_cookies', true);
     SweetSuite.sale = SweetSuite.sale || parseInt(window.sale, 10) || null;
     controller.set('subscription', Subscription.create());

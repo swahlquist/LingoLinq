@@ -10,7 +10,7 @@ export function redirect_to_modern_view(loginData = {}) {
     }
     const device_key = stashes
       .get_raw("coughDropDeviceId")
-      .replace(" " + capabilities.readable_device_name, "");
+      .replace(" " + window.capabilities.readable_device_name, "");
     if (!access_token) {
       access_token = session.access_token;
     }

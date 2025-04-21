@@ -114,8 +114,8 @@ module JsonApi::Json
     {
       'css' => nil,
       'settings' => {
-        'app_name' => "CoughDrop",
-        'company_name' => "CoughDrop",
+        'app_name' => ENV['APP_NAME'] || "AAC App",
+        'company_name' => ENV['COMPANY_NAME'] || "Someone",
         'logo_url' => "/images/logo-big.png",
         'ios_store_url' => ENV['IOS_STORE_URL'],
         'play_store_url' => ENV['PLAY_STORE_URL'],
