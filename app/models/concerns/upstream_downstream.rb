@@ -65,7 +65,7 @@ module UpstreamDownstream
       batch = unfound_boards.slice(0, 50)
       unfound_boards = unfound_boards - batch
       list = []
-      Octopus.using(:master) do
+      ApplicationRecord.using(:master) do
         list = Board.find_all_by_global_id(batch)
       end
       list = [top_board] + list if batch.include?('self')
@@ -168,7 +168,7 @@ module UpstreamDownstream
       Rails.logger.info('saving because downstream boards changed') if downstream_boards_changed
       @track_downstream_boards = false
       board = nil
-      Octopus.using(:master) do
+      ApplicationRecord.using(:master) do
         board = Board.find_by_global_id(self.global_id).reload
       end
       changes.each do |key, vals|
@@ -351,7 +351,7 @@ module UpstreamDownstream
   end
   
   def add_upstream_board_id!(id)
-    Octopus.using(:master) do
+    ApplicationRecord.using(:master) do
       self.reload
     end
     self.settings ||= {}

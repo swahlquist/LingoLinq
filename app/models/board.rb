@@ -119,7 +119,7 @@ class Board < ActiveRecord::Base
     if @sub_global && !true_user
       @sub_global
     else
-      super
+      association(:user).reader
     end
   end
 
@@ -1065,7 +1065,9 @@ class Board < ActiveRecord::Base
     @update_self_references = false
     return if @sub_id
     buttons = self.buttons || []
-    self.using(:master).reload
+    ApplicationRecord.using(:master) do
+      self.reload
+    end
     save_if_same_edit_key do
       self.settings['self_references_updated'] = true
       buttons.each do |button|

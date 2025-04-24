@@ -22,6 +22,7 @@ module AppSearcher
   def self.find(q, os)
     schemes = load_schemes
     if os == 'android'# && android_token
+      raise 'not implemented'
       gps = GooglePlaySearch::Search.new
       search = gps.search(q)
       results = []

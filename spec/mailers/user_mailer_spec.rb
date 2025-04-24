@@ -49,14 +49,14 @@ describe UserMailer, :type => :mailer do
       u = User.create(settings: {email: 'test@example.com'})
       expect_any_instance_of(User).to receive(:named_email).and_return("bob@example.com")
       m = UserMailer.confirm_registration(u.global_id)
-      expect(m.subject).to eq("CoughDrop - Welcome!")
+      expect(m.subject).to eq("MyCoolApp - Welcome!")
       expect(m.to).to eq(["bob@example.com"])
       html = message_body(m, :html)
-      expect(html).to match(/Welcome to CoughDrop!/)
-      expect(html).to match("-The CoughDrop Team")
+      expect(html).to match(/Welcome to MyCoolApp!/)
+      expect(html).to match("-The Someone Team")
       expect(html).to match(/<b>#{u.user_name}<\/b>/)
       text = message_body(m, :text)
-      expect(text).to match(/Welcome to CoughDrop!/)
+      expect(text).to match(/Welcome to MyCoolApp!/)
       expect(text).to match(/\"#{u.user_name}\"/)
     end
 
@@ -86,7 +86,7 @@ describe UserMailer, :type => :mailer do
       u = User.create(settings: {email: 'test@example.com'})
       expect_any_instance_of(User).to receive(:named_email).and_return("bob@example.com")
       m = UserMailer.forgot_password([u.global_id])
-      expect(m.subject).to eq("CoughDrop - Forgot Password Confirmation")
+      expect(m.subject).to eq("MyCoolApp - Forgot Password Confirmation")
       expect(m.to).to eq(["bob@example.com"])
       html = message_body(m, :html)
       expect(html).to match(/password reset/)
@@ -147,7 +147,7 @@ describe UserMailer, :type => :mailer do
   describe "login_no_user" do
     it "should send a message" do
       m = UserMailer.login_no_user('bacon@example.com')
-      expect(m.subject).to eq("CoughDrop - Login Help")
+      expect(m.subject).to eq("MyCoolApp - Login Help")
       expect(m.to).to eq(["bacon@example.com"])
       html = message_body(m, :html)
       expect(html).to match(/sign up for a free trial/)
@@ -163,7 +163,7 @@ describe UserMailer, :type => :mailer do
       u = User.create(settings: {email: 'test@example.com'})
       expect_any_instance_of(User).to receive(:named_email).and_return("bob@example.com")
       m = UserMailer.password_changed(u.global_id)
-      expect(m.subject).to eq("CoughDrop - Password Changed")
+      expect(m.subject).to eq("MyCoolApp - Password Changed")
       expect(m.to).to eq(["bob@example.com"])
       html = message_body(m, :html)
       expect(html).to match(/password change/)
@@ -181,7 +181,7 @@ describe UserMailer, :type => :mailer do
       expect_any_instance_of(User).to receive(:named_email).and_return("bob@example.com")
       expect_any_instance_of(User).to receive(:prior_named_email).and_return("fred@example.com")
       m = UserMailer.email_changed(u.global_id)
-      expect(m.subject).to eq("CoughDrop - Email Changed")
+      expect(m.subject).to eq("MyCoolApp - Email Changed")
       expect(m.to).to eq(["fred@example.com"])
       html = message_body(m, :html)
       expect(html).to match(/email address change/)
@@ -202,7 +202,7 @@ describe UserMailer, :type => :mailer do
       l.save
       expect_any_instance_of(User).to receive(:named_email).and_return("bob@example.com")
       m = UserMailer.log_message(u.global_id, l.global_id)
-      expect(m.subject).to eq("CoughDrop - New Message")
+      expect(m.subject).to eq("MyCoolApp - New Message")
       expect(m.to).to eq(["bob@example.com"])
       
       html = message_body(m, :html)
@@ -235,7 +235,7 @@ describe UserMailer, :type => :mailer do
       l.save
       expect_any_instance_of(User).to receive(:named_email).and_return("bob@example.com")
       m = UserMailer.log_message(u.global_id, l.global_id)
-      expect(m.subject).to eq("CoughDrop - New Message")
+      expect(m.subject).to eq("MyCoolApp - New Message")
       expect(m.to).to eq(["bob@example.com"])
       
       html = message_body(m, :html)
@@ -264,7 +264,7 @@ describe UserMailer, :type => :mailer do
       ENV['NEW_REGISTRATION_EMAIL'] = 'asdf@example.com'
       expect(Typhoeus).to receive(:get).and_raise("no worky")
       m = UserMailer.new_user_registration(u.global_id)
-      expect(m.subject).to eq('CoughDrop - New Communicator Registration')
+      expect(m.subject).to eq('MyCoolApp - New Communicator Registration')
       html = message_body(m, :html)
       expect(html).to match(/just signed up/)
       expect(html).to match(/#{u.user_name}/)
@@ -283,7 +283,7 @@ describe UserMailer, :type => :mailer do
       ENV['NEW_REGISTRATION_EMAIL'] = 'asdf@example.com'
       expect(Typhoeus).to receive(:get).and_raise("no worky")
       m = UserMailer.new_user_registration(u.global_id)
-      expect(m.subject).to eq('CoughDrop - New Supervisor Registration')
+      expect(m.subject).to eq('MyCoolApp - New Supervisor Registration')
       html = message_body(m, :html)
       expect(html).to match(/just signed up/)
       expect(html).to match(/#{u.user_name}/)
@@ -302,7 +302,7 @@ describe UserMailer, :type => :mailer do
       ENV['NEW_REGISTRATION_EMAIL'] = 'asdf@example.com'
       expect(Typhoeus).to receive(:get).with("http://api.ipstack.com/1.2.3.4?access_key=#{ENV['IPSTACK_KEY']}", {timeout: 5}).and_return(OpenStruct.new(body: {city: 'Paris', region_name: 'Texas', country_code: 'US'}.to_json))
       m = UserMailer.new_user_registration(u.global_id)
-      expect(m.subject).to eq('CoughDrop - New Communicator Registration')
+      expect(m.subject).to eq('MyCoolApp - New Communicator Registration')
       html = message_body(m, :html)
       expect(html).to match(/just signed up/)
       expect(html).to match(/#{u.user_name}/)
@@ -323,7 +323,7 @@ describe UserMailer, :type => :mailer do
       ENV['NEW_REGISTRATION_EMAIL'] = 'asdf@example.com'
       expect(Typhoeus).to receive(:get).with("http://api.ipstack.com/1.2.3.4?access_key=#{ENV['IPSTACK_KEY']}", {timeout: 5}).and_return(OpenStruct.new(body: {city: 'Paris', region_name: 'Texas', country_code: 'US'}.to_json))
       m = UserMailer.new_user_registration(u.global_id)
-      expect(m.subject).to eq('CoughDrop - New Communicator Registration')
+      expect(m.subject).to eq('MyCoolApp - New Communicator Registration')
       html = message_body(m, :html)
       expect(html).to match(/just signed up/)
       expect(html).to match(/#{u.user_name}/)
@@ -344,7 +344,7 @@ describe UserMailer, :type => :mailer do
       o = Organization.create
       m = UserMailer.organization_assigned(u.global_id, o.global_id)
       expect(m.to).to eq(['fred@example.com'])
-      expect(m.subject).to eq("CoughDrop - Organization Sponsorship Added")
+      expect(m.subject).to eq("MyCoolApp - Organization Sponsorship Added")
       
       html = message_body(m, :html)
       expect(html).to match(/added you to their list of supported users/)
@@ -364,7 +364,7 @@ describe UserMailer, :type => :mailer do
       o = Organization.create
       m = UserMailer.organization_unassigned(u.global_id, o.global_id)
       expect(m.to).to eq(['fred@example.com'])
-      expect(m.subject).to eq("CoughDrop - Organization Sponsorship Removed")
+      expect(m.subject).to eq("MyCoolApp - Organization Sponsorship Removed")
       
       html = message_body(m, :html)
       expect(html).to match(/was just removed from the supported list by an organization/)
@@ -392,7 +392,7 @@ describe UserMailer, :type => :mailer do
       u = User.create(:settings => {'name' => 'stacy', 'email' => 'stacy@example.com'})
       m = UserMailer.usage_reminder(u.global_id)
       expect(m.to).to eq(['stacy@example.com'])
-      expect(m.subject).to eq("CoughDrop - Checking In")
+      expect(m.subject).to eq("MyCoolApp - Checking In")
 
       html = message_body(m, :html)
       expect(html).to match(/Hello again/)
@@ -405,7 +405,7 @@ describe UserMailer, :type => :mailer do
       u = User.create(:settings => {'name' => 'stacy', 'email' => 'stacy@example.com'})
       m = UserMailer.usage_reminder(u.global_id)
       expect(m.to).to eq(['stacy@example.com'])
-      expect(m.subject).to eq("CoughDrop - Checking In")
+      expect(m.subject).to eq("MyCoolApp - Checking In")
 
       html = message_body(m, :html)
       expect(html).to match(/Hello again/)
@@ -419,7 +419,7 @@ describe UserMailer, :type => :mailer do
       u.save
       m = UserMailer.usage_reminder(u.global_id)
       expect(m.to).to eq(['stacy@example.com'])
-      expect(m.subject).to eq("CoughDrop - Checking In")
+      expect(m.subject).to eq("MyCoolApp - Checking In")
 
       html = message_body(m, :html)
       expect(html).to match(/Hello again/)
@@ -434,7 +434,7 @@ describe UserMailer, :type => :mailer do
       u = User.create(:settings => {'name' => 'stacy', 'email' => 'stacy@example.com'})
       m = UserMailer.usage_reminder(u.global_id)
       expect(m.to).to eq(['stacy@example.com'])
-      expect(m.subject).to eq("CoughDrop - Checking In")
+      expect(m.subject).to eq("MyCoolApp - Checking In")
 
       html = message_body(m, :html)
       expect(html).to match(/Hello again/)
@@ -449,7 +449,7 @@ describe UserMailer, :type => :mailer do
       u.save
       m = UserMailer.usage_reminder(u.global_id)
       expect(m.to).to eq(['stacy@example.com'])
-      expect(m.subject).to eq("CoughDrop - Checking In")
+      expect(m.subject).to eq("MyCoolApp - Checking In")
 
       html = message_body(m, :html)
       expect(html).to match(/Hello again/)
@@ -465,7 +465,7 @@ describe UserMailer, :type => :mailer do
       User.link_supervisor_to_user(u, u2)
       m = UserMailer.usage_reminder(u.global_id)
       expect(m.to).to eq(['stacy@example.com'])
-      expect(m.subject).to eq("CoughDrop - Checking In")
+      expect(m.subject).to eq("MyCoolApp - Checking In")
 
       html = message_body(m, :html)
       expect(html).to match(/Hello again/)
@@ -482,29 +482,29 @@ describe UserMailer, :type => :mailer do
       u = User.create(:settings => {'name' => 'stacy', 'email' => 'stacy@example.com'})
       m = UserMailer.usage_reminder(u.global_id)
       expect(m.to).to eq(['stacy@example.com'])
-      expect(m.subject).to eq("CoughDrop - Checking In")
+      expect(m.subject).to eq("MyCoolApp - Checking In")
 
       html = message_body(m, :html)
       expect(html).to match(/Hello again/)
-      expect(html).to match(/keep using all of CoughDrop/)
+      expect(html).to match(/keep using all of MyCoolApp/)
       
       text = message_body(m, :text)
       expect(text).to match(/Hello again/)
-      expect(text).to match(/keep using all the features of CoughDrop/)
+      expect(text).to match(/keep using all the features of MyCoolApp/)
       
       u.expires_at = nil
       u.save
       m = UserMailer.usage_reminder(u.global_id)
       expect(m.to).to eq(['stacy@example.com'])
-      expect(m.subject).to eq("CoughDrop - Checking In")
+      expect(m.subject).to eq("MyCoolApp - Checking In")
 
       html = message_body(m, :html)
       expect(html).to match(/Hello again/)
-      expect(html).not_to match(/keep using all of CoughDrop/)
+      expect(html).not_to match(/keep using all of MyCoolApp/)
       
       text = message_body(m, :text)
       expect(text).to match(/Hello again/)
-      expect(text).not_to match(/keep using all the features of CoughDrop/)      
+      expect(text).not_to match(/keep using all the features of MyCoolApp/)      
     end
   end
   
@@ -562,17 +562,17 @@ describe UserMailer, :type => :mailer do
       b.save
       m = UserMailer.badge_awarded(u.global_id, b.global_id)
       expect(m.to).to eq(['amanda@example.com'])
-      expect(m.subject).to eq("CoughDrop - Badge Awarded")
+      expect(m.subject).to eq("MyCoolApp - Badge Awarded")
       
       html = message_body(m, :html)
       expect(html).to match(/Level 1/)
       expect(html).to match(/Awesome Badge/)
-      expect(html).to match(/You have earned a CoughDrop badge!/)
+      expect(html).to match(/You have earned a MyCoolApp badge!/)
       expect(html).to match(/part of a set, so keep at it/)
 
       text = message_body(m, :text)
       expect(text).to match(/Level 1/)
-      expect(text).to match(/You have earned a CoughDrop badge!/)
+      expect(text).to match(/You have earned a MyCoolApp badge!/)
       expect(text).to match(/part of a set, so keep at it/)
     end
 
@@ -590,7 +590,7 @@ describe UserMailer, :type => :mailer do
       b.save
       m = UserMailer.badge_awarded(u2.global_id, b.global_id)
       expect(m.to).to eq(['betty@example.com'])
-      expect(m.subject).to eq("CoughDrop - Badge Awarded")
+      expect(m.subject).to eq("MyCoolApp - Badge Awarded")
       
       html = message_body(m, :html)
       expect(html).to match(/Level 1/)
@@ -598,7 +598,7 @@ describe UserMailer, :type => :mailer do
       expect(html).to match(/part of the goal,/)
       expect(html).to match(/best goal ever/)
       expect(html).to_not match(/part of a set, so keep at it/)
-      expect(html).to match(/#{u.user_name} has earned a CoughDrop badge!/)
+      expect(html).to match(/#{u.user_name} has earned a MyCoolApp badge!/)
 
       text = message_body(m, :text)
       expect(text).to match(/Level 1/)
@@ -606,7 +606,7 @@ describe UserMailer, :type => :mailer do
       expect(text).to match(/part of the goal,/)
       expect(text).to match(/best goal ever/)
       expect(text).to_not match(/part of a set, so keep at it/)
-      expect(text).to match(/#{u.user_name} has earned a CoughDrop badge!/)
+      expect(text).to match(/#{u.user_name} has earned a MyCoolApp badge!/)
     end
   end
   
@@ -638,7 +638,7 @@ describe UserMailer, :type => :mailer do
       m = UserMailer.log_summary(u.global_id)
       
       expect(m.to).to eq(['stacy@example.com'])
-      expect(m.subject).to eq("CoughDrop - Communication Report")
+      expect(m.subject).to eq("MyCoolApp - Communication Report")
 
       html = m.body.to_s
       expect(html).to_not match(/All Communicators/)
@@ -683,7 +683,7 @@ describe UserMailer, :type => :mailer do
       m = UserMailer.log_summary(u.global_id)
       
       expect(m.to).to eq(['stacy@example.com'])
-      expect(m.subject).to eq("CoughDrop - Communication Report")
+      expect(m.subject).to eq("MyCoolApp - Communication Report")
 
       html = m.body.to_s
       expect(html).to match(/All Communicators/)
@@ -704,7 +704,7 @@ describe UserMailer, :type => :mailer do
       u = User.create(settings: {email: 'test@example.com'})
       expect_any_instance_of(User).to receive(:named_email).and_return("bob@example.com")
       m = UserMailer.valet_password_enabled(u.global_id)
-      expect(m.subject).to eq("CoughDrop - Valet Login Enabled")
+      expect(m.subject).to eq("MyCoolApp - Valet Login Enabled")
       expect(m.to).to eq(["bob@example.com"])
       html = message_body(m, :html)
       expect(html).to match(/were recently enabled/)
@@ -721,7 +721,7 @@ describe UserMailer, :type => :mailer do
       u = User.create(settings: {email: 'test@example.com'})
       expect_any_instance_of(User).to receive(:named_email).and_return("bob@example.com")
       m = UserMailer.valet_password_used(u.global_id)
-      expect(m.subject).to eq("CoughDrop - Valet Login Used")
+      expect(m.subject).to eq("MyCoolApp - Valet Login Used")
       expect(m.to).to eq(["bob@example.com"])
       html = message_body(m, :html)
       expect(html).to match(/were recently used to log in to your account/)
@@ -744,7 +744,7 @@ describe UserMailer, :type => :mailer do
       l.nonce
       expect_any_instance_of(User).to receive(:named_email).and_return("bob@example.com")
       m = UserMailer.lesson_assigned(l.global_id, [u.global_id])
-      expect(m.subject).to eq("CoughDrop - New Lesson Assigned")
+      expect(m.subject).to eq("MyCoolApp - New Lesson Assigned")
       expect(m.to).to eq(["bob@example.com"])
       html = message_body(m, :html)
       expect(html).to match(/Super Lesson/)

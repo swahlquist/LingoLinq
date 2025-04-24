@@ -126,7 +126,7 @@ module Renaming
         end
       end
       LogSessionBoard.where(:board_id => record.id).each do |lsb|
-        Octopus.using(:master) do
+        ApplicationRecord.using(:master) do
           session = lsb.log_session
 #          session.with_lock do
           if session

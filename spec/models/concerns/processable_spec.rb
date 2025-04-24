@@ -187,7 +187,11 @@ describe Processable, :type => :model do
       u1 = User.create
       b = Board.create(user: u1)
       bb = Board.find_by_path("#{b.global_id}-#{u1.global_id}")
-      expect(bb).to receive(:copy_for).with(u1, copy_id: b.global_id, skip_save: true).and_return('blah')
+      expect(bb).to receive(:copy_for){|u, opts|
+        expect(u).to eq(u1)
+        expect(opts[:copy_id]).to eq(b.global_id)
+        expect(opts[:skip_save]).to eq(true)
+      }.and_return('blah') #.with(u1, copy_id: b.global_id, skip_save: true).and_return('blah')
       expect(bb.generate_possible_clone).to eq('blah')
     end
 
@@ -195,7 +199,11 @@ describe Processable, :type => :model do
       u1 = User.create
       b = Board.create(user: u1, settings: {'copy_id' => 'bacon'})
       bb = Board.find_by_path("#{b.global_id}-#{u1.global_id}")
-      expect(bb).to receive(:copy_for).with(u1, copy_id: 'bacon', skip_save: true).and_return('blah')
+      expect(bb).to receive(:copy_for){|u, opts|
+        expect(u).to eq(u1)
+        expect(opts[:copy_id]).to eq('bacon')
+        expect(opts[:skip_save]).to eq(true)
+      }.and_return('blah') #.with(u1, copy_id: 'bacon', skip_save: true).and_return('blah')
       expect(bb.generate_possible_clone).to eq('blah')
     end
 

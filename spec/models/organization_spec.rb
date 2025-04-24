@@ -1165,7 +1165,7 @@ describe Organization, :type => :model do
 
       expect(o.settings['communicator_profile']).to eq({
         'profile_id' => 'cole',
-        'frequency' => 7776000.0,
+        'frequency' => 7889238.0,
         'template_id' => nil
       })
       expect(o.settings['supervisor_profile']).to eq({
@@ -1218,7 +1218,7 @@ describe Organization, :type => :model do
       }, 'updater' => u)
       expect(o.processing_errors).to eq([])
       expect(o.settings['communicator_profile']).to eq({
-        'frequency' => 7776000.0,
+        'frequency' => 7889238.0,
         'profile_id' => pt.global_id,
         'template_id' => pt.global_id
       })
@@ -1239,7 +1239,7 @@ describe Organization, :type => :model do
       }, 'updater' => u)
       expect(o.processing_errors).to eq([])
       expect(o.settings['communicator_profile']).to eq({
-        'frequency' => 7776000.0,
+        'frequency' => 7889238.0,
         'profile_id' => pt.global_id,
         'template_id' => pt.global_id
       })      
@@ -1248,7 +1248,7 @@ describe Organization, :type => :model do
       expect(o).to_not receive(:schedule)
       o.process({
         'communicator_profile_id' => pt.global_id,
-        'communicator_profile_frequency' => 7776000.0,
+        'communicator_profile_frequency' => 7889238.0,
         'supervisor_profile_id' => 'default',
         'supervisor_profile_frequency' => 500,
       }, 'updater' => u)

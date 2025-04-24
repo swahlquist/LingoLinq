@@ -250,7 +250,7 @@ module Uploadable
     if rasterize
       convert_image(file.path)
       file.close
-      if !File.exists?("#{file.path}.raster.png")
+      if !File.exist?("#{file.path}.raster.png")
         if self.settings['rasterized'] == 'pending' && rasterize
           self.settings['rasterized'] = nil 
           self.save

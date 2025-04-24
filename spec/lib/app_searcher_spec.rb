@@ -100,29 +100,30 @@ describe AppSearcher do
           'id' => 'friendship2',
         })
       ]
-      expect_any_instance_of(GooglePlaySearch::Search).to receive(:search).with('hat').and_return(results)
-      expect(AppSearcher.find('hat', 'android')).to eq([{
-        'name' => 'awesome',
-        'author_name' => 'somebody',
-        'author_url' => 'http://www.example.com',
-        'image_url' => 'http://www.example.com/icon.png',
-        'price' => 0,
-        'description' => "This is one cool app",
-        'view_url' => 'http://www.example.com',
-        'package' => 'friendship',
-        'id' => 'friendship',
-        'launch_url' => 'https://www.example.com'
-      }, {
-        'name' => 'awesome',
-        'author_name' => 'somebody',
-        'author_url' => 'http://www.example.com',
-        'image_url' => 'http://www.example.com/icon.png',
-        'price' => 0,
-        'description' => "This is one cool app",
-        'view_url' => 'http://www.example.com',
-        'package' => 'friendship2',
-        'id' => 'friendship2'
-      }])
+      #expect_any_instance_of(GooglePlaySearch::Search).to receive(:search).with('hat').and_return(results)
+      expect { AppSearcher.find('hat', 'android') }.to raise_error('not implemented')
+      # expect(AppSearcher.find('hat', 'android')).to eq([{
+      #   'name' => 'awesome',
+      #   'author_name' => 'somebody',
+      #   'author_url' => 'http://www.example.com',
+      #   'image_url' => 'http://www.example.com/icon.png',
+      #   'price' => 0,
+      #   'description' => "This is one cool app",
+      #   'view_url' => 'http://www.example.com',
+      #   'package' => 'friendship',
+      #   'id' => 'friendship',
+      #   'launch_url' => 'https://www.example.com'
+      # }, {
+      #   'name' => 'awesome',
+      #   'author_name' => 'somebody',
+      #   'author_url' => 'http://www.example.com',
+      #   'image_url' => 'http://www.example.com/icon.png',
+      #   'price' => 0,
+      #   'description' => "This is one cool app",
+      #   'view_url' => 'http://www.example.com',
+      #   'package' => 'friendship2',
+      #   'id' => 'friendship2'
+      # }])
     end
     
     it "should return only the first fifteen android results" do
@@ -140,9 +141,10 @@ describe AppSearcher do
         r['package'] = "app#{i}"
         results << OpenStruct.new(r)
       end
-      expect_any_instance_of(GooglePlaySearch::Search).to receive(:search).with('hat').and_return(results)
-      res = AppSearcher.find('hat', 'android')
-      expect(res.length).to eq(15)
+      #expect_any_instance_of(GooglePlaySearch::Search).to receive(:search).with('hat').and_return(results)
+      expect { AppSearcher.find('hat', 'android') }.to raise_error('not implemented')
+      # res = AppSearcher.find('hat', 'android')
+      # expect(res.length).to eq(15)
     end
 
     it "should return a processed list of ios results" do

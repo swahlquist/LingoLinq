@@ -1,34 +1,34 @@
-## CoughDrop - Every Voice Should Be Heard
+## SweetSuite AAC - Every Voice Should Be Heard
 [![OpenAAC](https://www.openaac.org/images//OpenAAC-advocate-blue.svg)](https://www.openaac.org/advocates.html)
 
-CoughDrop is an open, web-based AAC (Augmentative and Alternative Communication) app. Basically
+SweetSuite is an open, web-based AAC (Augmentative and Alternative Communication) app. Basically
 if people struggle getting their words out for whatever reason, they can use
 the speech synthesis engine on a computing device to "speak" for them. Sometimes
 they'll just type on a keyboard (think Stephen Hawking), but sometimes typing is too slow
 or not a reasonable expectation, so communication
-"boards", which are just grids of labeled pictures, can also be used. CoughDrop supports
+"boards", which are just grids of labeled pictures, can also be used. SweetSuite supports
 building these grids and keyboards, optionally tracks their usage, and also offers
 tools for the team supporting the communicator.
 
-CoughDrop is web-based, and will run on most modern browsers. You can try it out
+SweetSuite is web-based, and will run on most modern browsers. You can try it out
 for free at https://www.mycoughdrop.com. It leverages modern web standards like the
 Web Speech API, the Application Cache, IndexedDB and a bunch of HTML5 to work
 both online and offline. It should run on Windows, Mac, ChromeOS, iOS and Android, and can
 be packaged up for app stores as well.
 
-Unlike most other AAC apps, which are installed and live on a single device, CoughDrop
+Unlike most other AAC apps, which are installed and live on a single device, SweetSuite
 is cloud-based, and syncs edits across multiple devices automatically. This may seem 
 unimportant, but when you spend a lot of time building a very personalized vocabulary,
 you don't want a broken device or a dead battery to prevent you from communicating. With
-CoughDrop you can just log into a different device and keep going.
+SweetSuite you can just log into a different device and keep going.
 
-Additionally, CoughDrop allows users to add "supervisors", which are administrative
+Additionally, SweetSuite allows users to add "supervisors", which are administrative
 users that can help modify boards, track usage reports, and coordinate strategy. In the
 past users would have to hand over their device so therapists or parents could make
-changes or review usage logs, but with CoughDrop supervisors can do their thing on their
+changes or review usage logs, but with SweetSuite supervisors can do their thing on their
 own devices. And permission controls always stay in the hands of the user.
 
-Anyway, that's CoughDrop in a nutshell. There's a lot of extra fun added in, with
+Anyway, that's SweetSuite in a nutshell. There's a lot of extra fun added in, with
 built-in assessment and profiling tools, real-time following and remote modeling,
 embedded books and videos, two way SMS messaging, modeling ideas and trend reporting,
 focus words mode, goal setting and automated tracking, team coordination, 
@@ -36,13 +36,13 @@ organizational branding and management tools, classroom-level targets and
 goal tracking, continuing education linking and tracking, etc.
 The code is open source so you're free to
 run it yourself. We require a code contributor agreement before accepting changes into
-our repo. Boards created in CoughDrop use the Open Board Format (http://www.openboardformat.org)
-so they should export/import across instances of CoughDrop and a few other systems
+our repo. Boards created in SweetSuite use the Open Board Format (http://www.openboardformat.org)
+so they should export/import across instances of SweetSuite and a few other systems
 without having to dig around in the database.
 
 ### Technical Notes
 
-CoughDrop has a Rails backend (`/`) and an Ember frontend (`/app/frontend`), which are 
+SweetSuite has a Rails backend (`/`) and an Ember frontend (`/app/frontend`), which are 
 both contained in this
 repository. If you're familiar with those frameworks then hopefully nothing here will
 embarrass me too much -- ...I mean, hopefully you'll be able to pick up pretty quickly
@@ -55,7 +55,7 @@ By only using the open API, the mobile apps can easily maintain feature parity
 
 #### Development Considerations
 
-CoughDrop supports multiple locales, so when developing anything on the frontend, whether
+SweetSuite supports multiple locales, so when developing anything on the frontend, whether
 in templates or modals and alerts, you will need to use the internationalization libraries
 in order to support locales. Do net ever add raw text strings to any user-facing 
 resources, always use the i18n helpers. You can find examples of the helpers 
@@ -139,7 +139,7 @@ automatically regenerate `frontend.js` which is what the Rails app makes sure to
 to the browser.
 
 #### Running the Full System
-CoughDrop has more than one process needed for things to run correctly. You can look in 
+SweetSuite has more than one process needed for things to run correctly. You can look in 
 `Procfile` for the commands we use to run a web server or a resque (background job) server.
 The ember process is for development. It auto-compiles code as it's written, and shouldn't
 be run in production. The easiest way to get things up and running is with the foreman gem:
@@ -192,15 +192,15 @@ rake flush_users (run daily)
 rake clean_old_deleted_boards (run daily)
 ```
 
-CoughDrop also utilizes a separate site that it uses for web sockets to track
-online status and support real-time interactions. Additionally, CoughDrop relies on access
+SweetSuite also utilizes a separate site that it uses for web sockets to track
+online status and support real-time interactions. Additionally, SweetSuite relies on access
 to an opensymbols.org-type endpoint for image search. Also there are multiple AWS and Google
 API endpoints that can and probably should be enabled. Google API is straightforward, just
 needs an access token for Places, Translate, Maps, & TTS. AWS is a little more complicated,
 you can implement access keys for SES (emails), SNS (notifications, potentially two-way so see api/callbacks_controller), S3 storage (probably required
 at this point), Elastic Transcoder (need pipelines for converting audio & video to standardized formats, also need to configure pipeline callbacks -- see api/callbacks_controller). Additional less-vital integrations are listed in .env.example
 
-When developing code for CoughDrop, make sure to take into consideration that the
+When developing code for SweetSuite, make sure to take into consideration that the
 codebase is deployed both as a web app, and as a packaged app on mobile and desktop apps.
 All platform-specific code should be extracted from the codebase or encapsulated within
 the `capabilities` library when necessary. Capabilities checks may be used to 
@@ -235,7 +235,7 @@ available at [https://tools.openaac.org/inflections/inflections.html](OpenAAC).
 ##### Troubleshooting
 
 Need console access? Normally on Heroku you would just run 'heroku run rails console' to 
-get production access, or just 'rails console' for a local Ruby console. Since CoughDrop
+get production access, or just 'rails console' for a local Ruby console. Since SweetSuite
 needs to ensure user data remains protected, all production requests need to be audited
 (see the model `AuditEvent`), so there are some safeguards to prevent unaudited 
 console access, and you'll need to run `bin/heroku_console` to get yourself a production
@@ -263,7 +263,7 @@ See also CODE_INVESTIGATION.md
 
 ### Contribution Ideas
 
-CoughDrop is an actively-developed system with an API-driven Rails backend and
+SweetSuite is an actively-developed system with an API-driven Rails backend and
 a rather heavy Ember frontend. This can be intimidating, even for people
 who know these frameworks, and prevent people from contributing. If you 
 would like to contribute, you can join the (https://www.openaac.org)[OpenAAC Slack Channel]
@@ -279,7 +279,7 @@ the apps can be updated dynamically when all that's changed is the scripts
 - API documentation (yeah I know, I should have done it along the way)
 - Maintenance Work:
 - Upgrade Rails & Ruby (and ensure everything still works, then bump to latest Heroku stack)
-  - For CoughDrop, CoughDrop-Websocket, presenters.aacconference.com
+  - For SweetSuite, CoughDrop-Websocket, presenters.aacconference.com
 - Upgrade Cordova (and ensure everything still works)
 - Upgrade Electron (and re-build dependencies for new version)
   - Generate a new signing cert or move to Microsoft app store for updates
@@ -291,6 +291,6 @@ I'm happy to provide guidance for any of these projects to help get them underwa
 
 ### License
 
-Copyright (C) 2014-2019 CoughDrop, Inc.
+Copyright (C) 2014-2025 CoughDrop & OpenAAC, Inc.
 
 Released under the AGPLv3 license or later.

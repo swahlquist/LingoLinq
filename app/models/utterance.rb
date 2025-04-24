@@ -48,7 +48,7 @@ class Utterance < ActiveRecord::Base
   
   def generate_preview
     url = SentencePic.generate(self)
-#    Octopus.using(:master) do
+#    ApplicationRecord.using(:master) do
       self.reload
 #    end
     self.data ||= {}

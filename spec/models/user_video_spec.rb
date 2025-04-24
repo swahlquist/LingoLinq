@@ -3,6 +3,7 @@ require 'spec_helper'
 describe UserVideo, type: :model do
   it "should show correct permissions" do
     v = UserVideo.new
+    User.count
     expect(v.permissions_for(nil)).to eq({'user_id' => nil, 'view' => true})
     u = User.create
     expect(v.permissions_for(u)).to eq({'user_id' => u.global_id, 'view' => true})

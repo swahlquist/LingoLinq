@@ -456,7 +456,7 @@ describe Api::SearchController, :type => :controller do
     
     it "should raise on non-200 response" do
       req = FakeRequest.new(false)
-      expect { controller.get_url_in_chunks(req) }.to raise_error(Api::SearchController::BadFileError, 'File not retrieved, status 400')
+      expect { controller.get_url_in_chunks(req) }.to raise_error(Api::SearchController::BadFileError, 'File not retrieved, status 400 for whatevs')
     end
     
     it "should raise on too-large a file" do

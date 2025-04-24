@@ -12,7 +12,7 @@ module ExtraData
     end
     raise "extra_data_attribute not defined" unless self.extra_data_attribute
 
-    Octopus.using(:master) do
+    ApplicationRecord.using(:master) do
       if self.data['extra_data_nonce'] && !self.data[self.extra_data_attribute] && !@cached_extra_data
         if self.data['extra_data_revision'] == self.data['full_set_revision']
           private_path = self.extra_data_private_url

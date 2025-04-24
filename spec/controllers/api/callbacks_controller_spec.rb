@@ -27,7 +27,7 @@ describe Api::CallbacksController, :type => :controller do
         expect(opts[:retry_limit]).to eq(2)
         expect(opts[:retry_backoff]).to_not eq(nil)
       }.and_return(client)
-      expect(client).to receive(:confirm_subscription).with(topic_arn: 'fried', token: 'ahem', authenticate_on_unsubscribe: 'true')
+      expect(client).to receive(:confirm_subscription).with({topic_arn: 'fried', token: 'ahem', authenticate_on_unsubscribe: 'true'})
       request.headers['x-amz-sns-message-type'] = 'SubscriptionConfirmation'
       request.headers['x-amz-sns-topic-arn'] = 'fried'
       post 'callback', body: {:Token => 'ahem'}.to_json
@@ -49,7 +49,7 @@ describe Api::CallbacksController, :type => :controller do
         expect(opts[:retry_limit]).to eq(2)
         expect(opts[:retry_backoff]).to_not eq(nil)
       }.and_return(client)
-      expect(client).to receive(:confirm_subscription).with(topic_arn: 'fried', token: 'ahem', authenticate_on_unsubscribe: 'true')
+      expect(client).to receive(:confirm_subscription).with({topic_arn: 'fried', token: 'ahem', authenticate_on_unsubscribe: 'true'})
       request.headers['x-amz-sns-message-type'] = 'SubscriptionConfirmation'
       request.headers['x-amz-sns-topic-arn'] = 'fried'
       post 'callback', body: {:Token => 'ahem'}.to_json

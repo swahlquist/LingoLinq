@@ -134,7 +134,7 @@ describe Exporter do
       expect(Exporter).to receive(:log_json).with(user, [session], false).and_return({})
       tmp = OpenStruct.new
       expect(Tempfile).to receive(:new).and_return(tmp)
-      expect(tmp).to receive(:write).with("{\n}")
+      expect(tmp).to receive(:write).with("{}")
       expect(tmp).to receive(:close)
       expect(tmp).to receive(:path).and_return('path')
       Exporter.export_log(session.global_id, false)
@@ -154,7 +154,7 @@ describe Exporter do
       expect(Exporter).to receive(:log_json).with(user, [session], true).and_return({})
       tmp = OpenStruct.new
       expect(Tempfile).to receive(:new).and_return(tmp)
-      expect(tmp).to receive(:write).with("{\n}")
+      expect(tmp).to receive(:write).with("{}")
       expect(tmp).to receive(:close)
       expect(tmp).to receive(:path).and_return('path')
       Exporter.export_log(session.global_id, true)

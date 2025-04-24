@@ -4,7 +4,7 @@ threads threads_count, threads_count
 
 preload_app!
 
-rackup      DefaultRackup
+rackup  DefaultRackup if defined?(DefaultRackup)
 port        ENV['PORT']     || 3000
 # for intranet testing, comment out port command and use this instead:
 # bind "tcp://0.0.0.0:3000"

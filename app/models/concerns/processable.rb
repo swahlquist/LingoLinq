@@ -32,7 +32,7 @@ module Processable
     key = self.edit_key
     block.call
     rec = nil
-#    Octopus.using(:master) do
+#    ApplicationRecord.using(:master) do
       rec = self.class.find(self.id).reload
 #    end
     return key == rec.edit_key
@@ -89,7 +89,7 @@ module Processable
   end
   
   def assert_current_record!(flexible=false)
-#    Octopus.using(:master) do
+#    ApplicationRecord.using(:master) do
       diff = flexible ? 10 : 0
       raise ActiveRecord::StaleObjectError if self && self.updated_at.to_f < self.class.where(:id => self.id).select('updated_at')[0].updated_at.to_f - diff
 #    end

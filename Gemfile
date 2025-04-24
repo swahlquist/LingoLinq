@@ -5,16 +5,22 @@ source 'https://rubygems.org'
 group :development, :test do
   gem 'dotenv'
   gem 'guard'
-  gem 'guard-jasmine'
   gem 'guard-rspec'
   gem 'rspec-rails'
   gem 'simplecov', :require => false
   gem 'rack-test'
   gem 'rails-controller-testing'
+  gem 'matrix'
+  gem 'mutex_m'
+  gem 'benchmark'
+  gem 'drb'
+  gem 'irb'
 end
 
+gem 'concurrent-ruby', '1.3.4'
+
 # Rails 5.2 doesn't seem to work on heroku with octopus :-/
-gem 'rails', '5.0.7.2'
+gem 'rails', '6.1' # TODO: upgrade to 7.2
 gem 'pg' #, '0.19.0' #, '>=1.1.3'
 gem 'sass-rails'
 gem 'uglifier', '>= 1.3.0'
@@ -34,7 +40,6 @@ gem 'puma'
 gem 'rack-offline'
 gem 'paper_trail'
 gem 'geokit'
-gem 'google_play_search'
 gem 'obf'
 gem 'accessible-books'
 gem 's3'
@@ -52,8 +57,6 @@ gem 'ttfunk', '1.7'
 gem 'ruby-saml'
 gem 'rotp'
 
-gem 'ar-octopus', require: 'octopus', git: 'https://github.com/whitmer/octopus'
-# TODO: getting errors on load for rails 5, so pinned to beta, this isn't actually a core dependency
 gem 'sinatra'
 gem 'sanitize'
 
@@ -76,4 +79,4 @@ end
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
 
-ruby "2.6.6"
+ruby "3.4.3"

@@ -30,7 +30,7 @@ class LogSession < ActiveRecord::Base
     return true if skip_extra_data_processing?
     self.data['events'] ||= []
     if self.user_id && self.id
-      Octopus.using(:master) do
+      ApplicationRecord.using(:master) do
         # pull in missing job_stash events that might have gotten clobbered
         ids = {}
         self.data['events'].each{|e| ids[e['id']] = true }
@@ -968,7 +968,7 @@ class LogSession < ActiveRecord::Base
       if !frd
         schedule_once(:split_out_later_sessions, true)
       else
-        Octopus.using(:master) do
+        ApplicationRecord.using(:master) do
           # self.with_lock do
             self.assert_extra_data
             sessions = session_split_check
@@ -1267,7 +1267,7 @@ class LogSession < ActiveRecord::Base
       end
     end
     non_user_params = non_user_params.with_indifferent_access
-#    Octopus.using(:master) do
+#    ApplicationRecord.using(:master) do
       non_user_params[:user] = User.find_by_global_id(non_user_params[:user_id])
       non_user_params[:author] = User.find_by_global_id(non_user_params[:author_id])
       non_user_params[:device] = Device.find_by_global_id(non_user_params[:device_id])
@@ -1294,7 +1294,7 @@ class LogSession < ActiveRecord::Base
     if params['events']
       params['events'] = valid_events
       if active_session && !non_user_params['imported']
-        Octopus.using(:master) do
+        ApplicationRecord.using(:master) do
           # active_session.with_lock do
             active_session.process(params, non_user_params)
             active_session.check_for_merger
@@ -1320,7 +1320,7 @@ class LogSession < ActiveRecord::Base
   def self.process_daily_use(params, non_user_params)
     raise "author required" unless non_user_params[:author]
     session = nil
-    Octopus.using(:master) do
+    ApplicationRecord.using(:master) do
       session = LogSession.find_or_create_by(:log_type => 'daily_use', :user_id => non_user_params[:author].id)
 #      session.with_lock do
         session.assert_extra_data
@@ -1349,7 +1349,7 @@ class LogSession < ActiveRecord::Base
 
   def self.process_modeling_event(event, non_user_params)
     session = nil
-    Octopus.using(:master) do
+    ApplicationRecord.using(:master) do
       session = LogSession.find_or_create_by(log_type: 'modeling_activities', user_id: non_user_params[:user].id)
 #      session.with_lock do
         session.assert_extra_data
@@ -1472,7 +1472,7 @@ class LogSession < ActiveRecord::Base
     #   LogMerger.where(log_session_id: session_ids).where(['merge_at < ?', 3.days.ago]).delete_all
     # end
 
-#    Octopus.using(:master) do
+#    ApplicationRecord.using(:master) do
       LogSession.where(id: log_ids).each do |session|
         session.schedule_once_for(:slow, :check_for_merger)
       end
@@ -1487,7 +1487,10 @@ class LogSession < ActiveRecord::Base
           next if merged_ids[merger.log_session_id]
 
           merged_ids[merger.log_session_id] = true
-          log = LogSession.using(:master).find_by(id: merger.log_session_id)
+          log = nil
+          ApplicationRecord.using(:master) do
+            log = LogSession.find_by(id: merger.log_session_id)
+          end
           if log
             log.schedule_once_for(:slow, :check_for_merger, true)
             log_ids << log.id
@@ -1502,7 +1505,7 @@ class LogSession < ActiveRecord::Base
 
   def check_for_merger(frd=false)
     log = self
-    Octopus.using(:master) do
+    ApplicationRecord.using(:master) do
       # log.with_lock do
         log.assert_extra_data
         cutoff = (log.user && log.user.log_session_duration) || User.default_log_session_duration

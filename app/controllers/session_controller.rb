@@ -458,8 +458,8 @@ class SessionController < ApplicationController
 
   # Method to handle IdP initiated logouts
   def saml_idp_logout_request
-    logout_request = OneLogin::RubySaml::SloLogoutrequest.new(params[:SAMLRequest])
-    if !logout_request.is_valid?
+    logout_request = OneLogin::RubySaml::SloLogoutrequest.new(params[:SAMLRequest]) rescue nil
+    if !logout_request || !logout_request.is_valid?
       logger.error "IdP initiated LogoutRequest was not valid!"
       return render :inline => "Error: Invalid logout request"
     end

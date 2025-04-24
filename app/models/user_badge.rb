@@ -389,7 +389,7 @@ class UserBadge < ActiveRecord::Base
         units.each do |unit|
           # TODO: sharding
           next if unit[:date] > today
-          Octopus.using(:master) do
+          ApplicationRecord.using(:master) do
             sessions = LogSession.where(:user_id => user.id, :goal_id => goal.id, :log_type => 'assessment').where(['started_at >= ? AND started_at <= ? AND ended_at <= ?', unit[:date] - 1.0, unit[:date] + 1.0, unit[:date] + 1.0]).order('started_at ASC')
             session = sessions.detect{|s| s.started_at.to_date == unit[:date] && s.data['assessment'] && s.data['assessment']['automatic'] }
             if !session

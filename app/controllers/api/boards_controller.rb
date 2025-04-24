@@ -304,11 +304,11 @@ class Api::BoardsController < ApplicationController
   def show
     Rails.logger.warn('looking up board')
     board = nil
-    # Octopus.using(:master) do
+    ApplicationRecord.using(:master) do
       # Followers can get behind, resulting in outdated info being
       # sent back to the user, or used for background jobs :-/
       board = Board.find_by_path(params['id'])
-    # end
+    end
     if !board
       deleted_board = DeletedBoard.find_by_path(params['id'])
       # TODO: Sharding

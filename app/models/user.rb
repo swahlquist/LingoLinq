@@ -214,7 +214,9 @@ class User < ActiveRecord::Base
   end
 
   def track_protected_source(source_id)
-    self.using(:master).reload
+    ApplicationRecord.using(:master) do
+      self.reload
+    end
     self.settings['activated_sources'] ||= []
     # The first time a user leverages a third-party symbol library by 
     # saving a board with an image, log it as activated (unless it happens)

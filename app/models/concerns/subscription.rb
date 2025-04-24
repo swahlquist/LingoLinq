@@ -167,7 +167,9 @@ module Subscription
           RemoteAction.create(path: "#{self.global_id}::#{prior_org && prior_org.global_id}", act_at: 12.hours.from_now, action: 'notify_unassigned')
         end
       end
-      self.using(:master).reload
+      ApplicationRecord.using(:master) do
+        self.reload
+      end
       self.settings['subscription'] ||= {}
       self.settings['subscription']['org_detach'] = org_id
       self.clear_existing_subscription(:allow_grace_period => true, removed_org_links: removed_links) if was_sponsored && !self.org_sponsored?

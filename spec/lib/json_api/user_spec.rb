@@ -434,7 +434,7 @@ describe JsonApi::User do
         json = JsonApi::User.build_json(u.reload, permissions: u)
         expect(json['last_profile']).to eq({
           "added" => 959839200,
-          "expected" => 990943200,
+          "expected" => 991396152,
           "log_id" => s.global_id,
           "profile_id" => "mmm",
           "summary" => 12,
@@ -453,7 +453,7 @@ describe JsonApi::User do
         json = JsonApi::User.build_json(u.reload, permissions: u)
         expect(json['last_profile']).to eq({
           "added" => 1117605600,
-          "expected" => 1148709600,
+          "expected" => 1149162552,
           "log_id" => s.global_id,
           "profile_id" => "vvv",
           "summary" => 123,

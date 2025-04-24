@@ -47,7 +47,9 @@ module Worker
 
   def self.find_record(klass, id)
     obj = klass.find_by(id: id)
-    obj.using(:master).reload if obj
+    ApplicationRecord.using(:master) do
+      obj = obj.reload if obj
+    end
     obj
   end
 

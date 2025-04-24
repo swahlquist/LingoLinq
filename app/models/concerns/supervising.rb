@@ -196,9 +196,13 @@ module Supervising
       user.update_setting({
         'supervisors' => user.settings['supervisors']
       })
-      user.using(:master).reload
+      ApplicationRecord.using(:master) do
+        user.reload
+      end
       if do_unlink
-        supervisor.using(:master).reload
+        ApplicationRecord.using(:master) do
+          supervisor.reload
+        end
         supervisor.settings['supervisees'] = (supervisor.settings['supervisees'] || []).select{|s| s['user_id'] != user.global_id }
         # If a user was auto-subscribed for being added as a supervisor, un-subscribe them when removed
         if supervisor.settings['supervisees'].empty? && supervisor.settings['supporter_role_auto_set']
@@ -235,7 +239,9 @@ module Supervising
       link.secondary_user_id = supervisor.id
       link.save!
 
-      supervisor.using(:master).reload
+      ApplicationRecord.using(:master) do
+        supervisor.reload
+      end
       # first-time supervisors should automatically be set to the supporter role
       if !supervisor.settings['supporter_role_auto_set'] && supervisor.settings['preferences']['role'] != 'supporter'
         supervisor.settings['supporter_role_auto_set'] = true

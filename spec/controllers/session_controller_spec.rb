@@ -784,7 +784,7 @@ describe SessionController, :type => :controller do
       u.rename_to('freddy')
       u.save
       post :token, params: {:grant_type => 'password', :client_id => 'browser', :client_secret => token, :username => 'fred', :password => 'seashells'}
-      expect(response).to_not be_success
+      expect(response.code).to_not eq(200)
       json = JSON.parse(response.body)
       expect(json['error']).to eq('Invalid authentication attempt')
     end
@@ -1159,7 +1159,7 @@ describe SessionController, :type => :controller do
         o.reload
         expect(o.external_auth_key).to_not eq(nil)
         expect(Organization.external_auth_for(u)).to eq(o)
-        post :auth_lookup, {params: {ref: 'bobx@yahoo.com'}}
+        post :auth_lookup, params: {ref: 'bobx@yahoo.com'}
         json = assert_error("no result found")
       end
 
@@ -1168,7 +1168,7 @@ describe SessionController, :type => :controller do
         o.settings['saml_metadata_url'] = "assdf"
         o.settings['saml_enforced'] = true
         o.save
-        post :auth_lookup, {params: {ref: 'assdf'}}
+        post :auth_lookup, params: {ref: 'assdf'}
         json = assert_success_json
         expect(json['url']).to eq("http://test.host/saml/init?org_id=#{o.global_id}&device_id=saml_auth")
       end
@@ -1180,7 +1180,7 @@ describe SessionController, :type => :controller do
         o.save
         o.process({external_auth_shortcut: 'bacon', 'saml_metadata_url' => 'aassdf'}, {updater: User.create})
         expect(Organization.find_by_saml_issuer('bacon')).to eq(o)
-        post :auth_lookup, {params: {ref: 'bacon'}}
+        post :auth_lookup, params: {ref: 'bacon'}
         json = assert_success_json
         expect(json['url']).to eq("http://test.host/saml/init?org_id=#{o.global_id}&device_id=saml_auth")
       end
@@ -1190,14 +1190,14 @@ describe SessionController, :type => :controller do
         o.settings['saml_metadata_url'] = "assdf"
         o.settings['saml_enforced'] = true
         o.save
-        post :auth_lookup, {params: {ref: o.global_id}}
+        post :auth_lookup, params: {ref: o.global_id}
         json = assert_success_json
         expect(json['url']).to eq("http://test.host/saml/init?org_id=#{o.global_id}&device_id=saml_auth")
       end
 
       it "should error on org without config" do
         o = Organization.create
-        post :auth_lookup, {params: {ref: o.global_id}}
+        post :auth_lookup, params: {ref: o.global_id}
         assert_error("no result found")
       end
 
@@ -1211,7 +1211,7 @@ describe SessionController, :type => :controller do
         o.reload
         expect(o.external_auth_key).to_not eq(nil)
         expect(Organization.external_auth_for(u)).to eq(o)
-        post :auth_lookup, {params: {ref: u.user_name}}
+        post :auth_lookup, params: {ref: u.user_name}
         json = assert_success_json
         expect(json['url']).to eq("http://test.host/saml/init?org_id=#{o.global_id}&device_id=saml_auth")
       end
@@ -1221,7 +1221,7 @@ describe SessionController, :type => :controller do
         o.settings['saml_metadata_url'] = "assdf"
         o.settings['saml_enforced'] = true
         o.save
-        post :auth_lookup, {params: {ref: o.global_id, user_id: 'asdf'}}
+        post :auth_lookup, params: {ref: o.global_id, user_id: 'asdf'}
         assert_not_found('asdf')
       end
 
@@ -1231,7 +1231,7 @@ describe SessionController, :type => :controller do
         o.settings['saml_enforced'] = true
         o.save
         u = User.create
-        post :auth_lookup, {params: {ref: o.global_id, user_id: u.global_id}}
+        post :auth_lookup, params: {ref: o.global_id, user_id: u.global_id}
         assert_unauthorized
       end
 
@@ -1242,7 +1242,7 @@ describe SessionController, :type => :controller do
         o.settings['saml_enforced'] = true
         o.save
         expect(GoSecure).to receive(:nonce).with('saml_tmp_token').and_return('abcdefg')
-        post :auth_lookup, {params: {ref: o.global_id, user_id: @user.global_id}}
+        post :auth_lookup, params: {ref: o.global_id, user_id: @user.global_id}
         json = assert_success_json
         expect(json['url']).to eq("http://test.host/saml/init?org_id=#{o.global_id}&device_id=saml_auth&user_id=#{@user.global_id}&tmp_token=abcdefg")
       end
@@ -1259,7 +1259,7 @@ describe SessionController, :type => :controller do
         o.reload
         expect(o.external_auth_key).to_not eq(nil)
         expect(Organization.external_auth_for(u)).to eq(o)
-        post :auth_lookup, {params: {ref: 'bob@yahoo.com'}}
+        post :auth_lookup, params: {ref: 'bob@yahoo.com'}
         json = assert_success_json
         expect(json['url']).to eq("http://test.host/saml/init?org_id=#{o.global_id}&device_id=saml_auth")
       end

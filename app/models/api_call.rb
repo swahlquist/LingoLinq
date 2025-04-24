@@ -1,5 +1,6 @@
 class ApiCall < ActiveRecord::Base
   include SecureSerialize
+  # raise "replicate should be a separate sub-class"
   include Replicate
   secure_serialize :data
   

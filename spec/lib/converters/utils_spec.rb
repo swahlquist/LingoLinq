@@ -75,7 +75,7 @@ describe Converters::Utils do
           'symbol_background' => 'white',
           'user' => u
         })
-        expect(File.exists?(opts['font'])).to eq(true)
+        expect(File.exist?(opts['font'])).to eq(true)
       }
       res = Converters::Utils.board_to_remote(b, u.global_id, {'file_type' => 'pdf', 'font' => 'comic_sans', 'include' => 'this'})
       expect(res).to eq("http://www.example.com/file.obf")

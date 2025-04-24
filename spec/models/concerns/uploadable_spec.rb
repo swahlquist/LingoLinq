@@ -243,7 +243,7 @@ describe Uploadable, :type => :model do
         file = File.open("#{path}.raster.png", 'wb')
         file.puts("asdf")
       end
-      expect(File).to receive(:exists?).and_return(true)
+      expect(File).to receive(:exist?).and_return(true)
   
       expect(s.settings['content_type']).to eq(nil)
       s.upload_to_remote("http://pic.com/cow.png", true)

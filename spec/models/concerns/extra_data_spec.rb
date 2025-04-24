@@ -36,7 +36,7 @@ describe ExtraData, :type => :model do
         end
         expect(type).to eq('text/json')
         expect(local).to_not eq(nil)
-        expect(File.exists?(local)).to eq(true)
+        expect(File.exist?(local)).to eq(true)
       end.exactly(1).times.and_return(nil)
       s.detach_extra_data('force')
       expect(paths).to eq(['private'])
@@ -98,7 +98,7 @@ describe ExtraData, :type => :model do
         end
         expect(type).to eq('text/json')
         expect(local).to_not eq(nil)
-        expect(File.exists?(local)).to eq(true)
+        expect(File.exist?(local)).to eq(true)
         expect(s.decrypted_json(File.read(local))).to eq([])
       end.exactly(1).times.and_return(nil)
       s.detach_extra_data(true)
@@ -121,7 +121,7 @@ describe ExtraData, :type => :model do
         end
         expect(type).to eq('text/json')
         expect(local).to_not eq(nil)
-        expect(File.exists?(local)).to eq(true)
+        expect(File.exist?(local)).to eq(true)
       end.and_return(nil)
       s.detach_extra_data(true)
       expect(paths).to eq(['private'])
@@ -143,7 +143,7 @@ describe ExtraData, :type => :model do
         end
         expect(type).to eq('text/json')
         expect(local).to_not eq(nil)
-        expect(File.exists?(local)).to eq(true)
+        expect(File.exist?(local)).to eq(true)
       end.exactly(1).times.and_return(nil)
       s.detach_extra_data('force')
       expect(paths).to eq(['private'])   
@@ -184,7 +184,7 @@ describe ExtraData, :type => :model do
         end
         expect(type).to eq('text/json')
         expect(local).to_not eq(nil)
-        expect(File.exists?(local)).to eq(true)
+        expect(File.exist?(local)).to eq(true)
       end.exactly(1).times.and_return({error: 'throttled'})
       s.detach_extra_data('force')
       expect(paths).to eq(['private'])   
@@ -224,7 +224,7 @@ describe ExtraData, :type => :model do
         end
         expect(type).to eq('text/json')
         expect(local).to_not eq(nil)
-        expect(File.exists?(local)).to eq(true)
+        expect(File.exist?(local)).to eq(true)
       end.exactly(2).times.and_return({path: 'a/b/c.json', uploaded: true})
       s.detach_extra_data('force')
       expect(paths).to eq(['private', 'public'])   
@@ -252,7 +252,7 @@ describe ExtraData, :type => :model do
         end
         expect(type).to eq('text/json')
         expect(local).to_not eq(nil)
-        expect(File.exists?(local)).to eq(true)
+        expect(File.exist?(local)).to eq(true)
       end.exactly(2).times.and_return({path: "a/b/c/d"})
       s.detach_extra_data('force')
       expect(paths).to eq(['private', 'public']) 
@@ -273,7 +273,7 @@ describe ExtraData, :type => :model do
       expect(Uploader).to receive(:remote_upload) do |path, local, type|
         expect(type).to eq('text/json')
         expect(local).to_not eq(nil)
-        expect(File.exists?(local)).to eq(true)
+        expect(File.exist?(local)).to eq(true)
       end.and_raise("throttled upload")
       expect(RemoteAction.count).to eq(2)
       bs.detach_extra_data(true)
@@ -325,7 +325,7 @@ describe ExtraData, :type => :model do
         end
         expect(type).to eq('text/json')
         expect(local).to_not eq(nil)
-        expect(File.exists?(local)).to eq(true)
+        expect(File.exist?(local)).to eq(true)
       end.exactly(1).times.and_raise("throttled upload")
       s.detach_extra_data('force')
       expect(paths).to eq(['private']) 
@@ -355,7 +355,7 @@ describe ExtraData, :type => :model do
         end
         expect(type).to eq('text/json')
         expect(local).to_not eq(nil)
-        expect(File.exists?(local)).to eq(true)
+        expect(File.exist?(local)).to eq(true)
       end.exactly(1).times.and_raise("throttled upload")
       expect(RemoteAction.count).to eq(0)
       s.detach_extra_data('force')

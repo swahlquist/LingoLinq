@@ -151,7 +151,7 @@ module Converters::ObfLocal
         btn = buttons.detect{|b| b['id'].to_s == id.to_s }
         if btn
           bi = images.detect{|i| i.global_id == btn['image_id'] }
-          word = bi && word_list.detect{|w| w[1][:url] == URI.encode(bi.url) || w[1][:url]  == bi.url }
+          word = bi && word_list.detect{|w| w[1][:url] == URI.escape(bi.url) || w[1][:url]  == bi.url }
           word ||= word_list.detect{|w| btn['eng_label'] && w[0] == btn['eng_label'] }
           if !word && src
             grid2 = BoardContent.load_content(src, 'grid')['order'] || []
@@ -159,7 +159,7 @@ module Converters::ObfLocal
             btn2 = src.buttons.detect{|b| b['id'].to_s == id.to_s }
             if btn2
               bi2 = src.known_button_images.detect{|i| i.global_id == btn2['image_id']}
-              word = bi2 && word_list.detect{|w| w[1][:url] == URI.encode(bi2.url) || w[1][:url]  == bi2.url }
+              word = bi2 && word_list.detect{|w| w[1][:url] == URI.escape(bi2.url) || w[1][:url]  == bi2.url }
             end
           end
           if word && (word[0].to_s != btn['label'].to_s)
@@ -212,7 +212,7 @@ module Converters::ObfLocal
     WORDS.each do |word, data|
       if !data[:path] && data[:url]
         ext = data[:url].split(/\./)[-1]
-        res = Typhoeus.get(URI.encode(data[:url]))
+        res = Typhoeus.get(URI.escape(data[:url]))
         if res.success?
           f = File.open("./public/images/emergency/#{word}.#{ext}", 'wb')
           f.write(res.body)
