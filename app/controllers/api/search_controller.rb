@@ -136,22 +136,31 @@ class Api::SearchController < ApplicationController
   end
   
   def proxy
-    # TODO: must be escaped to correctly handle URLs like 
-    # "https://opensymbols.s3.amazonaws.com/libraries/arasaac/to be reflected.png"
-    # but it must also work for already-escaped URLs like
-    # "http://www.stephaniequinn.com/Music/Commercial%2520DEMO%2520-%252013.mp3"
+    # URL processing with validation
     a, b = (params['url'] || '').split(/\/\//, 2)
     b = (b || '').sub(/\/\//, '/').to_s if b.match(/^opensymbols/)
     url = [a, b].join("//")
+    # Validate URL to prevent SSRF
     uri = URI.parse(url) rescue nil
     Rails.logger.warn("proxying #{url}")
     uri ||= URI.parse(URI.escape(url))
-    # TODO: add timeout for slow requests
+    
+    # Whitelist allowed domains
+    allowed_domains = ['opensymbols.s3.amazonaws.com', 'www.opensymbols.org', 'api.flickr.com', 'translate.google.com']
+    unless allowed_domains.include?(uri.host)
+      return api_error 400, {error: 'Domain not allowed'}
+    end
+    
+    # Continue with the request
     request = Typhoeus::Request.new(uri.to_s, followlocation: true)
     begin
       content_type, body = get_url_in_chunks(request)
       if content_type == 'redirect'
         uri = URI.parse(body)
+        # Check if redirect URL's domain is allowed
+        unless allowed_domains.include?(uri.host)
+          return api_error 400, {error: 'Redirect domain not allowed'}
+        end
         request = Typhoeus::Request.new(uri.to_s, followlocation: true)
         content_type, body = get_url_in_chunks(request)
       end

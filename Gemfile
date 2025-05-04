@@ -80,3 +80,4 @@ end
 # gem 'capistrano', group: :development
 
 ruby "3.4.3"
+gem 'rack-cors'
