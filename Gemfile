@@ -78,3 +78,8 @@ end
 
 
 
+
+# Ruby 3.3+ compatibility for Rails 6.1
+gem 'mutex_m'
+gem 'matrix'
+gem 'benchmark'

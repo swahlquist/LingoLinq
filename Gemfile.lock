@@ -117,6 +117,7 @@ GEM
     aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.3.0)
+    benchmark (0.4.1)
     bigdecimal (3.2.2)
     boy_band (0.1.16)
     bugsnag (6.27.1)
@@ -199,6 +200,7 @@ GEM
       net-smtp
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
+    matrix (0.4.2)
     method_source (1.1.0)
     mime-types (3.7.0)
       logger
@@ -213,6 +215,7 @@ GEM
     multi_json (1.15.0)
     mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
+    mutex_m (0.3.0)
     nenv (0.3.0)
     net-imap (0.5.8)
       date
@@ -456,6 +459,7 @@ DEPENDENCIES
   aws-sdk-rails
   aws-sdk-ses (~> 1)
   aws-sdk-sns (~> 1)
+  benchmark
   boy_band
   bugsnag
   coffee-rails
@@ -469,6 +473,8 @@ DEPENDENCIES
   heroku-deflater
   http-2
   irb
+  matrix
+  mutex_m
   newrelic_rpm
   obf
   paper_trail
