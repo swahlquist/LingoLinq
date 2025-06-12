@@ -79,4 +79,6 @@ end
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
 
-ruby "3.4.3"gem 'mutex_m'
+ruby "3.4.3"
+gem 'mutex_m'
+
