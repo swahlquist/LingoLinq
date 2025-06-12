@@ -82,3 +82,5 @@ end
 ruby "3.4.3"
 gem 'mutex_m'
 
+gem 'benchmark'
+gem 'matrix'
