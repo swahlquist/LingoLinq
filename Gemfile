@@ -10,9 +10,6 @@ group :development, :test do
   gem 'simplecov', :require => false
   gem 'rack-test'
   gem 'rails-controller-testing'
-  gem 'matrix'
-  gem 'mutex_m'
-  gem 'benchmark'
   gem 'drb'
   gem 'irb'
 end
@@ -79,6 +76,6 @@ end
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
 
-ruby "3.4.3"
+ruby "3.3.4"
 
 
